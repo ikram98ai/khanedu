@@ -11,7 +11,6 @@ interface SubjectDetailProps {
 }
 
 export const SubjectDetail = ({ subject, onBack, onSelectLesson }: SubjectDetailProps) => {
-  const [selectedUnit, setSelectedUnit] = useState(0);
 
   const mockLessons = [
     {
@@ -22,66 +21,47 @@ export const SubjectDetail = ({ subject, onBack, onSelectLesson }: SubjectDetail
       unit: 0,
       progress: 100,
       duration: "15 min",
-      difficulty: "Beginner"
     },
     {
       id: 2,
       title: "Linear Equations",
       content: "Solve linear equations step by step with practical examples.",
       status: "PU",
-      unit: 0,
+      unit: 1,
       progress: 75,
       duration: "20 min",
-      difficulty: "Beginner"
     },
     {
       id: 3,
       title: "Quadratic Equations",
       content: "Master quadratic equations and their graphical representations.",
       status: "PU",
-      unit: 1,
+      unit: 2,
       progress: 50,
       duration: "25 min",
-      difficulty: "Intermediate"
     },
     {
       id: 4,
       title: "Polynomial Functions",
       content: "Explore polynomial functions and their properties.",
       status: "PU",
-      unit: 1,
+      unit: 3,
       progress: 0,
       duration: "30 min",
-      difficulty: "Intermediate"
     },
     {
       id: 5,
       title: "Systems of Equations",
       content: "Learn to solve systems of linear and nonlinear equations.",
       status: "PU",
-      unit: 2,
+      unit: 4,
       progress: 0,
       duration: "35 min",
-      difficulty: "Advanced"
     }
   ];
 
-  const units = [
-    { id: 0, name: "Fundamentals", description: "Basic algebraic concepts", lessons: 2 },
-    { id: 1, name: "Intermediate Topics", description: "More complex algebraic structures", lessons: 2 },
-    { id: 2, name: "Advanced Applications", description: "Real-world problem solving", lessons: 1 }
-  ];
 
-  const filteredLessons = mockLessons.filter(lesson => lesson.unit === selectedUnit);
 
-  const getDifficultyColor = (difficulty: string) => {
-    switch (difficulty) {
-      case "Beginner": return "bg-success/20 text-success";
-      case "Intermediate": return "bg-warning/20 text-warning";
-      case "Advanced": return "bg-destructive/20 text-destructive";
-      default: return "bg-muted text-muted-foreground";
-    }
-  };
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-background via-accent/5 to-primary/5">
@@ -113,30 +93,6 @@ export const SubjectDetail = ({ subject, onBack, onSelectLesson }: SubjectDetail
         <div className="grid grid-cols-1 lg:grid-cols-4 gap-8">
           {/* Units Sidebar */}
           <div className="lg:col-span-1">
-            <Card className="shadow-soft">
-              <CardHeader>
-                <CardTitle>Course Units</CardTitle>
-                <CardDescription>Progress through each unit</CardDescription>
-              </CardHeader>
-              <CardContent>
-                <div className="space-y-2">
-                  {units.map((unit) => (
-                    <button
-                      key={unit.id}
-                      onClick={() => setSelectedUnit(unit.id)}
-                      className={`w-full text-left p-3 rounded-lg transition-all duration-200 ${
-                        selectedUnit === unit.id
-                          ? 'bg-primary text-primary-foreground shadow-soft'
-                          : 'bg-muted/50 hover:bg-muted'
-                      }`}
-                    >
-                      <div className="font-medium">{unit.name}</div>
-                      <div className="text-xs opacity-80">{unit.lessons} lessons</div>
-                    </button>
-                  ))}
-                </div>
-              </CardContent>
-            </Card>
 
             {/* Progress Overview */}
             <Card className="shadow-soft mt-6">
@@ -162,13 +118,9 @@ export const SubjectDetail = ({ subject, onBack, onSelectLesson }: SubjectDetail
 
           {/* Lessons Content */}
           <div className="lg:col-span-3">
-            <div className="mb-6">
-              <h2 className="text-2xl font-bold mb-2">{units[selectedUnit].name}</h2>
-              <p className="text-muted-foreground">{units[selectedUnit].description}</p>
-            </div>
-
+     
             <div className="space-y-4">
-              {filteredLessons.map((lesson, index) => (
+              {mockLessons.map((lesson, index) => (
                 <Card 
                   key={lesson.id} 
                   className="shadow-soft hover:shadow-medium transition-all duration-200 cursor-pointer"
@@ -197,9 +149,7 @@ export const SubjectDetail = ({ subject, onBack, onSelectLesson }: SubjectDetail
                             <span>⏱️</span>
                             <span>{lesson.duration}</span>
                           </div>
-                          <Badge className={getDifficultyColor(lesson.difficulty)}>
-                            {lesson.difficulty}
-                          </Badge>
+                       
                         </div>
 
                         {lesson.progress > 0 && (

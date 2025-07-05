@@ -47,19 +47,16 @@ export const LessonDetail = ({ lesson, subject, onBack }: LessonDetailProps) => 
     {
       id: 1,
       content: "Solve the equation: 3x + 7 = 22",
-      difficulty: "Easy",
       solution: "x = 5"
     },
     {
       id: 2,
       content: "Find the slope and y-intercept of the line y = -2x + 3",
-      difficulty: "Medium",
       solution: "Slope = -2, y-intercept = 3"
     },
     {
       id: 3,
       content: "Graph the equation y = 2x - 1 and identify where it crosses the axes",
-      difficulty: "Medium",
       solution: "x-intercept at (0.5, 0), y-intercept at (0, -1)"
     }
   ];
@@ -94,15 +91,7 @@ export const LessonDetail = ({ lesson, subject, onBack }: LessonDetailProps) => 
     }
   };
 
-  const getDifficultyColor = (difficulty: string) => {
-    switch (difficulty) {
-      case "Easy": return "secondary";
-      case "Medium": return "outline";  
-      case "Hard": return "destructive";
-      default: return "secondary";
-    }
-  };
-
+ 
   return (
     <div className="min-h-screen bg-gradient-to-br from-background via-accent/5 to-primary/5">
       {/* Header */}
@@ -120,9 +109,7 @@ export const LessonDetail = ({ lesson, subject, onBack }: LessonDetailProps) => 
             <Badge className="bg-white/20 text-white border-white/30">
               {lesson.duration}
             </Badge>
-            <Badge className="bg-white/20 text-white border-white/30">
-              {lesson.difficulty}
-            </Badge>
+       
             <span className="text-blue-100">• Progress: {lesson.progress}%</span>
           </div>
         </div>
@@ -182,9 +169,7 @@ export const LessonDetail = ({ lesson, subject, onBack }: LessonDetailProps) => 
                   <CardHeader>
                     <div className="flex items-center justify-between">
                       <CardTitle className="text-lg">Problem {index + 1}</CardTitle>
-                      <Badge variant={getDifficultyColor(task.difficulty)}>
-                        {task.difficulty}
-                      </Badge>
+                   
                     </div>
                   </CardHeader>
                   <CardContent>
