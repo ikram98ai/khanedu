@@ -2,39 +2,72 @@
 @tailwind components;
 @tailwind utilities;
 
-/* Definition of the design system. All colors, gradients, fonts, etc should be defined here. 
-All colors MUST be HSL.
-*/
+/* Educational Platform Design System - Coursera-inspired */
 
 @layer base {
   :root {
+    /* Primary Brand Colors - Professional Blue/Teal */
     --background: 0 0% 100%;
-    --foreground: 222.2 84% 4.9%;
+    --foreground: 216 19% 16%;
 
     --card: 0 0% 100%;
-    --card-foreground: 222.2 84% 4.9%;
+    --card-foreground: 216 19% 16%;
 
     --popover: 0 0% 100%;
-    --popover-foreground: 222.2 84% 4.9%;
+    --popover-foreground: 216 19% 16%;
 
-    --primary: 222.2 47.4% 11.2%;
-    --primary-foreground: 210 40% 98%;
+    --primary: 210 100% 56%;
+    --primary-foreground: 0 0% 100%;
+    --primary-hover: 210 100% 48%;
 
-    --secondary: 210 40% 96.1%;
-    --secondary-foreground: 222.2 47.4% 11.2%;
+    --secondary: 210 40% 96%;
+    --secondary-foreground: 216 19% 16%;
 
-    --muted: 210 40% 96.1%;
-    --muted-foreground: 215.4 16.3% 46.9%;
+    --muted: 220 14% 96%;
+    --muted-foreground: 215 16% 47%;
 
-    --accent: 210 40% 96.1%;
-    --accent-foreground: 222.2 47.4% 11.2%;
+    --accent: 186 100% 94%;
+    --accent-foreground: 186 100% 26%;
 
-    --destructive: 0 84.2% 60.2%;
-    --destructive-foreground: 210 40% 98%;
+    --destructive: 0 84% 60%;
+    --destructive-foreground: 0 0% 100%;
 
-    --border: 214.3 31.8% 91.4%;
-    --input: 214.3 31.8% 91.4%;
-    --ring: 222.2 84% 4.9%;
+    --border: 220 13% 91%;
+    --input: 220 13% 91%;
+    --ring: 210 100% 56%;
+
+    /* Educational Platform Specific Colors */
+    --success: 142 71% 45%;
+    --success-foreground: 0 0% 100%;
+    --warning: 45 93% 47%;
+    --warning-foreground: 0 0% 100%;
+    --info: 199 89% 48%;
+    --info-foreground: 0 0% 100%;
+
+    /* Learning Progress Colors */
+    --progress-bg: 220 14% 96%;
+    --progress-fill: 210 100% 56%;
+    --progress-complete: 142 71% 45%;
+
+    /* Interactive States */
+    --hover-overlay: 210 100% 56% / 0.1;
+    --active-overlay: 210 100% 56% / 0.2;
+
+    /* Gradients */
+    --gradient-primary: linear-gradient(135deg, hsl(210 100% 56%), hsl(186 100% 56%));
+    --gradient-secondary: linear-gradient(135deg, hsl(220 14% 96%), hsl(210 40% 96%));
+    --gradient-hero: linear-gradient(135deg, hsl(210 100% 56%) 0%, hsl(186 100% 56%) 100%);
+
+    /* Shadows */
+    --shadow-soft: 0 1px 3px 0 hsl(0 0% 0% / 0.1), 0 1px 2px -1px hsl(0 0% 0% / 0.1);
+    --shadow-medium: 0 4px 6px -1px hsl(0 0% 0% / 0.1), 0 2px 4px -2px hsl(0 0% 0% / 0.1);
+    --shadow-large: 0 10px 15px -3px hsl(0 0% 0% / 0.1), 0 4px 6px -4px hsl(0 0% 0% / 0.1);
+    --shadow-glow: 0 0 40px hsl(210 100% 56% / 0.3);
+
+    /* Animations */
+    --transition-fast: all 0.15s cubic-bezier(0.4, 0, 0.2, 1);
+    --transition-normal: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    --transition-slow: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
 
     --radius: 0.5rem;
 
@@ -56,33 +89,54 @@ All colors MUST be HSL.
   }
 
   .dark {
-    --background: 222.2 84% 4.9%;
-    --foreground: 210 40% 98%;
+    /* Dark mode adaptations for educational platform */
+    --background: 216 19% 11%;
+    --foreground: 0 0% 95%;
 
-    --card: 222.2 84% 4.9%;
-    --card-foreground: 210 40% 98%;
+    --card: 216 19% 13%;
+    --card-foreground: 0 0% 95%;
 
-    --popover: 222.2 84% 4.9%;
-    --popover-foreground: 210 40% 98%;
+    --popover: 216 19% 13%;
+    --popover-foreground: 0 0% 95%;
 
-    --primary: 210 40% 98%;
-    --primary-foreground: 222.2 47.4% 11.2%;
+    --primary: 210 100% 65%;
+    --primary-foreground: 216 19% 11%;
+    --primary-hover: 210 100% 58%;
 
-    --secondary: 217.2 32.6% 17.5%;
-    --secondary-foreground: 210 40% 98%;
+    --secondary: 216 19% 16%;
+    --secondary-foreground: 0 0% 95%;
 
-    --muted: 217.2 32.6% 17.5%;
-    --muted-foreground: 215 20.2% 65.1%;
+    --muted: 216 19% 16%;
+    --muted-foreground: 215 16% 65%;
 
-    --accent: 217.2 32.6% 17.5%;
-    --accent-foreground: 210 40% 98%;
+    --accent: 186 100% 15%;
+    --accent-foreground: 186 100% 85%;
 
-    --destructive: 0 62.8% 30.6%;
-    --destructive-foreground: 210 40% 98%;
+    --destructive: 0 84% 65%;
+    --destructive-foreground: 0 0% 95%;
 
-    --border: 217.2 32.6% 17.5%;
-    --input: 217.2 32.6% 17.5%;
-    --ring: 212.7 26.8% 83.9%;
+    --border: 216 19% 18%;
+    --input: 216 19% 18%;
+    --ring: 210 100% 65%;
+
+    /* Educational Platform Dark Mode Colors */
+    --success: 142 71% 55%;
+    --success-foreground: 0 0% 95%;
+    --warning: 45 93% 57%;
+    --warning-foreground: 216 19% 11%;
+    --info: 199 89% 58%;
+    --info-foreground: 0 0% 95%;
+
+    /* Dark mode gradients */
+    --gradient-primary: linear-gradient(135deg, hsl(210 100% 65%), hsl(186 100% 65%));
+    --gradient-secondary: linear-gradient(135deg, hsl(216 19% 16%), hsl(216 19% 20%));
+    --gradient-hero: linear-gradient(135deg, hsl(210 100% 65%) 0%, hsl(186 100% 65%) 100%);
+
+    /* Dark mode shadows */
+    --shadow-soft: 0 1px 3px 0 hsl(0 0% 0% / 0.3), 0 1px 2px -1px hsl(0 0% 0% / 0.3);
+    --shadow-medium: 0 4px 6px -1px hsl(0 0% 0% / 0.3), 0 2px 4px -2px hsl(0 0% 0% / 0.3);
+    --shadow-large: 0 10px 15px -3px hsl(0 0% 0% / 0.3), 0 4px 6px -4px hsl(0 0% 0% / 0.3);
+    --shadow-glow: 0 0 40px hsl(210 100% 65% / 0.4);
     --sidebar-background: 240 5.9% 10%;
     --sidebar-foreground: 240 4.8% 95.9%;
     --sidebar-primary: 224.3 76.3% 48%;
