@@ -38,53 +38,53 @@ export const Dashboard = ({ user, enrollments, onSelectSubject }: DashboardProps
       </div>
 
       <div className="max-w-6xl mx-auto px-6 py-8">
-        {/* Stats Overview */}
+        {/* Stats Overview with staggered animations */}
         <div className="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8">
-          <Card className="shadow-soft">
+          <Card variant="elevated" className="animate-spring-in" style={{ animationDelay: '0.1s' }}>
             <CardContent className="p-6">
               <div className="flex items-center justify-between">
                 <div>
                   <p className="text-sm text-muted-foreground">Progress</p>
-                  <p className="text-2xl font-bold">{Math.round((mockProgress.completedLessons / mockProgress.totalLessons) * 100)}%</p>
+                  <p className="text-2xl font-bold animate-pulse-glow">{Math.round((mockProgress.completedLessons / mockProgress.totalLessons) * 100)}%</p>
                 </div>
-                <div className="text-2xl">📈</div>
+                <div className="text-2xl animate-float">📈</div>
               </div>
               <Progress value={(mockProgress.completedLessons / mockProgress.totalLessons) * 100} className="mt-2" />
             </CardContent>
           </Card>
 
-          <Card className="shadow-soft">
+          <Card variant="elevated" className="animate-spring-in" style={{ animationDelay: '0.2s' }}>
             <CardContent className="p-6">
               <div className="flex items-center justify-between">
                 <div>
                   <p className="text-sm text-muted-foreground">Avg Score</p>
-                  <p className="text-2xl font-bold">{mockProgress.avgScore}%</p>
+                  <p className="text-2xl font-bold text-success">{mockProgress.avgScore}%</p>
                 </div>
-                <div className="text-2xl">🎯</div>
+                <div className="text-2xl animate-float" style={{ animationDelay: '0.5s' }}>🎯</div>
               </div>
             </CardContent>
           </Card>
 
-          <Card className="shadow-soft">
+          <Card variant="elevated" className="animate-spring-in" style={{ animationDelay: '0.3s' }}>
             <CardContent className="p-6">
               <div className="flex items-center justify-between">
                 <div>
                   <p className="text-sm text-muted-foreground">Lessons</p>
                   <p className="text-2xl font-bold">{mockProgress.completedLessons}/{mockProgress.totalLessons}</p>
                 </div>
-                <div className="text-2xl">📚</div>
+                <div className="text-2xl animate-float" style={{ animationDelay: '1s' }}>📚</div>
               </div>
             </CardContent>
           </Card>
 
-          <Card className="shadow-soft">
+          <Card variant="floating" className="animate-spring-in" style={{ animationDelay: '0.4s' }}>
             <CardContent className="p-6">
               <div className="flex items-center justify-between">
                 <div>
                   <p className="text-sm text-muted-foreground">Streak</p>
-                  <p className="text-2xl font-bold">{mockProgress.streak} days</p>
+                  <p className="text-2xl font-bold text-warning animate-pulse-glow">{mockProgress.streak} days</p>
                 </div>
-                <div className="text-2xl">🔥</div>
+                <div className="text-2xl animate-pulse-glow">🔥</div>
               </div>
             </CardContent>
           </Card>
@@ -92,13 +92,15 @@ export const Dashboard = ({ user, enrollments, onSelectSubject }: DashboardProps
 
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
           {/* Enrolled Subjects */}
-          <div>
+          <div className="animate-slide-up-fade" style={{ animationDelay: '0.6s' }}>
             <h2 className="text-2xl font-bold mb-6">Your Subjects</h2>
             <div className="space-y-4">
               {enrollments.map((subject, index) => (
                 <Card 
                   key={subject.id} 
-                  className="shadow-soft hover:shadow-medium transition-all duration-200 cursor-pointer"
+                  variant="interactive"
+                  className="animate-spring-in"
+                  style={{ animationDelay: `${0.8 + (index * 0.1)}s` }}
                   onClick={() => onSelectSubject(subject)}
                 >
                   <CardContent className="p-6">
@@ -120,7 +122,7 @@ export const Dashboard = ({ user, enrollments, onSelectSubject }: DashboardProps
                           <div className="text-sm text-muted-foreground">
                             Progress: {20 + (index * 25)}% complete
                           </div>
-                          <Button variant="outline" size="sm">
+                          <Button variant="glass" size="sm">
                             Continue Learning
                           </Button>
                         </div>
@@ -135,13 +137,17 @@ export const Dashboard = ({ user, enrollments, onSelectSubject }: DashboardProps
           </div>
 
           {/* Recent Activity */}
-          <div>
+          <div className="animate-slide-up-fade" style={{ animationDelay: '0.7s' }}>
             <h2 className="text-2xl font-bold mb-6">Recent Activity</h2>
-            <Card className="shadow-soft">
+            <Card variant="glass" className="animate-spring-in" style={{ animationDelay: '0.9s' }}>
               <CardContent className="p-6">
                 <div className="space-y-4">
-                  {mockRecentActivity.map((activity) => (
-                    <div key={activity.id} className="flex items-center justify-between p-3 bg-muted/50 rounded-lg">
+                  {mockRecentActivity.map((activity, index) => (
+                    <div 
+                      key={activity.id} 
+                      className="flex items-center justify-between p-3 bg-surface-hover rounded-lg hover:bg-surface-pressed transition-all duration-300 animate-spring-in"
+                      style={{ animationDelay: `${1.1 + (index * 0.1)}s` }}
+                    >
                       <div>
                         <p className="font-medium">{activity.lesson}</p>
                         <p className="text-sm text-muted-foreground">{activity.subject}</p>
@@ -157,20 +163,20 @@ export const Dashboard = ({ user, enrollments, onSelectSubject }: DashboardProps
             </Card>
 
             {/* Quick Actions */}
-            <Card className="shadow-soft mt-6">
+            <Card variant="floating" className="mt-6 animate-spring-in" style={{ animationDelay: '1.2s' }}>
               <CardHeader>
                 <CardTitle>Quick Actions</CardTitle>
                 <CardDescription>Jump back into your learning</CardDescription>
               </CardHeader>
               <CardContent>
                 <div className="space-y-2">
-                  <Button variant="outline" className="w-full justify-start">
+                  <Button variant="glass" className="w-full justify-start">
                     📝 Take a Practice Quiz
                   </Button>
-                  <Button variant="outline" className="w-full justify-start">
+                  <Button variant="glass" className="w-full justify-start">
                     📖 Review Past Lessons
                   </Button>
-                  <Button variant="outline" className="w-full justify-start">
+                  <Button variant="glass" className="w-full justify-start">
                     🎯 View Learning Goals
                   </Button>
                 </div>

@@ -58,11 +58,28 @@
     --gradient-secondary: linear-gradient(135deg, hsl(220 14% 96%), hsl(210 40% 96%));
     --gradient-hero: linear-gradient(135deg, hsl(210 100% 56%) 0%, hsl(186 100% 56%) 100%);
 
-    /* Shadows */
-    --shadow-soft: 0 1px 3px 0 hsl(0 0% 0% / 0.1), 0 1px 2px -1px hsl(0 0% 0% / 0.1);
-    --shadow-medium: 0 4px 6px -1px hsl(0 0% 0% / 0.1), 0 2px 4px -2px hsl(0 0% 0% / 0.1);
-    --shadow-large: 0 10px 15px -3px hsl(0 0% 0% / 0.1), 0 4px 6px -4px hsl(0 0% 0% / 0.1);
+    /* Apple-inspired Depth & Layering System */
+    --shadow-soft: 0 1px 3px 0 hsl(0 0% 0% / 0.08), 0 1px 2px -1px hsl(0 0% 0% / 0.06);
+    --shadow-medium: 0 4px 12px -2px hsl(0 0% 0% / 0.12), 0 2px 8px -2px hsl(0 0% 0% / 0.08);
+    --shadow-large: 0 12px 24px -4px hsl(0 0% 0% / 0.15), 0 8px 16px -4px hsl(0 0% 0% / 0.1);
     --shadow-glow: 0 0 40px hsl(210 100% 56% / 0.3);
+    --shadow-elevated: 0 20px 40px -12px hsl(0 0% 0% / 0.2), 0 8px 32px -8px hsl(0 0% 0% / 0.12);
+    --shadow-floating: 0 32px 64px -12px hsl(0 0% 0% / 0.25), 0 16px 48px -16px hsl(0 0% 0% / 0.15);
+    --shadow-inset: inset 0 1px 0 hsl(0 0% 100% / 0.1), inset 0 -1px 0 hsl(0 0% 0% / 0.1);
+    
+    /* Glass & Blur Effects */
+    --glass-bg: hsl(var(--background) / 0.8);
+    --glass-border: hsl(var(--border) / 0.2);
+    --blur-backdrop: blur(20px) saturate(180%);
+    --blur-subtle: blur(8px);
+    --blur-medium: blur(16px);
+    
+    /* Interactive Surface States */
+    --surface-base: hsl(var(--card));
+    --surface-elevated: hsl(var(--card));
+    --surface-hover: hsl(var(--accent) / 0.05);
+    --surface-pressed: hsl(var(--accent) / 0.1);
+    --surface-glass: hsl(var(--background) / 0.7);
 
     /* Animations */
     --transition-fast: all 0.15s cubic-bezier(0.4, 0, 0.2, 1);
@@ -132,11 +149,23 @@
     --gradient-secondary: linear-gradient(135deg, hsl(216 19% 16%), hsl(216 19% 20%));
     --gradient-hero: linear-gradient(135deg, hsl(210 100% 65%) 0%, hsl(186 100% 65%) 100%);
 
-    /* Dark mode shadows */
-    --shadow-soft: 0 1px 3px 0 hsl(0 0% 0% / 0.3), 0 1px 2px -1px hsl(0 0% 0% / 0.3);
-    --shadow-medium: 0 4px 6px -1px hsl(0 0% 0% / 0.3), 0 2px 4px -2px hsl(0 0% 0% / 0.3);
-    --shadow-large: 0 10px 15px -3px hsl(0 0% 0% / 0.3), 0 4px 6px -4px hsl(0 0% 0% / 0.3);
+    /* Dark mode Apple-inspired shadows */
+    --shadow-soft: 0 1px 3px 0 hsl(0 0% 0% / 0.4), 0 1px 2px -1px hsl(0 0% 0% / 0.3);
+    --shadow-medium: 0 4px 12px -2px hsl(0 0% 0% / 0.5), 0 2px 8px -2px hsl(0 0% 0% / 0.4);
+    --shadow-large: 0 12px 24px -4px hsl(0 0% 0% / 0.6), 0 8px 16px -4px hsl(0 0% 0% / 0.5);
     --shadow-glow: 0 0 40px hsl(210 100% 65% / 0.4);
+    --shadow-elevated: 0 20px 40px -12px hsl(0 0% 0% / 0.7), 0 8px 32px -8px hsl(0 0% 0% / 0.5);
+    --shadow-floating: 0 32px 64px -12px hsl(0 0% 0% / 0.8), 0 16px 48px -16px hsl(0 0% 0% / 0.6);
+    --shadow-inset: inset 0 1px 0 hsl(0 0% 100% / 0.05), inset 0 -1px 0 hsl(0 0% 0% / 0.2);
+    
+    /* Dark mode glass & surfaces */
+    --glass-bg: hsl(var(--background) / 0.8);
+    --glass-border: hsl(var(--border) / 0.3);
+    --surface-base: hsl(var(--card));
+    --surface-elevated: hsl(var(--card));
+    --surface-hover: hsl(var(--accent) / 0.1);
+    --surface-pressed: hsl(var(--accent) / 0.2);
+    --surface-glass: hsl(var(--background) / 0.7);
     --sidebar-background: 240 5.9% 10%;
     --sidebar-foreground: 240 4.8% 95.9%;
     --sidebar-primary: 224.3 76.3% 48%;
