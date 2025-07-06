@@ -4,6 +4,10 @@ import { ProfileSetup } from "./profile/ProfileSetup";
 import { Dashboard } from "./dashboard/Dashboard";
 import { SubjectDetail } from "./subjects/SubjectDetail";
 import { LessonDetail } from "./lessons/LessonDetail";
+import { AIAssistant } from "./learning/AIAssistant";
+import { OfflineProvider } from "./offline/OfflineProvider";
+import { AccessibilityProvider } from "./accessibility/AccessibilityProvider";
+import { ErrorBoundary } from "./error/ErrorBoundary";
 
 type AppState = 'auth' | 'profile-setup' | 'dashboard' | 'subject-detail' | 'lesson-detail';
 type AuthMode = 'login' | 'register';
@@ -50,15 +54,20 @@ export const EducationalApp = () => {
     setAuthMode(prev => prev === 'login' ? 'register' : 'login');
   };
 
-  switch (appState) {
-    case 'auth':
-      return (
-        <AuthForm 
-          mode={authMode}
-          onToggleMode={toggleAuthMode}
-          onAuth={handleAuth}
-        />
-      );
+  return (
+    <ErrorBoundary>
+      <AccessibilityProvider>
+        <OfflineProvider>
+          {(() => {
+            switch (appState) {
+              case 'auth':
+                return (
+                  <AuthForm 
+                    mode={authMode}
+                    onToggleMode={toggleAuthMode}
+                    onAuth={handleAuth}
+                  />
+                );
 
     case 'profile-setup':
       return (
@@ -94,7 +103,16 @@ export const EducationalApp = () => {
         />
       );
 
-    default:
-      return <AuthForm mode={authMode} onToggleMode={toggleAuthMode} onAuth={handleAuth} />;
-  }
+              default:
+                return <AuthForm mode={authMode} onToggleMode={toggleAuthMode} onAuth={handleAuth} />;
+            }
+          })()}
+          <AIAssistant 
+            subject={selectedSubject?.name} 
+            lesson={selectedLesson?.title} 
+          />
+        </OfflineProvider>
+      </AccessibilityProvider>
+    </ErrorBoundary>
+  );
 };

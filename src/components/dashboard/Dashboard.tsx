@@ -2,6 +2,8 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Progress } from "@/components/ui/progress";
 import { Badge } from "@/components/ui/badge";
+import { SmartSearch } from "@/components/search/SmartSearch";
+import { ProgressAnalytics } from "@/components/learning/ProgressAnalytics";
 
 interface DashboardProps {
   user: any;
@@ -38,6 +40,10 @@ export const Dashboard = ({ user, enrollments, onSelectSubject }: DashboardProps
       </div>
 
       <div className="max-w-6xl mx-auto px-6 py-8">
+        {/* Smart Search */}
+        <div className="mb-8 flex justify-center">
+          <SmartSearch onSelectResult={(result) => console.log('Selected:', result)} />
+        </div>
         {/* Stats Overview with staggered animations */}
         <div className="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8">
           <Card variant="elevated" className="animate-spring-in" style={{ animationDelay: '0.1s' }}>
@@ -183,6 +189,11 @@ export const Dashboard = ({ user, enrollments, onSelectSubject }: DashboardProps
               </CardContent>
             </Card>
           </div>
+        </div>
+
+        {/* Progress Analytics */}
+        <div className="mt-12">
+          <ProgressAnalytics user={user} enrollments={enrollments} />
         </div>
       </div>
     </div>
