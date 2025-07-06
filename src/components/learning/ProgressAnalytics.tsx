@@ -75,7 +75,7 @@ export const ProgressAnalytics = ({ user, enrollments = [] }: ProgressAnalyticsP
                 <p className="text-sm text-muted-foreground">Current Streak</p>
                 <p className="text-2xl font-bold text-warning">{mockAnalytics.streak} days</p>
               </div>
-              <Zap className="h-8 w-8 text-warning animate-pulse-glow" />
+              <Zap className="h-8 w-8 text-warning" />
             </div>
           </CardContent>
         </Card>
@@ -153,9 +153,9 @@ export const ProgressAnalytics = ({ user, enrollments = [] }: ProgressAnalyticsP
               {achievements.map((achievement, index) => (
                 <div 
                   key={index}
-                  className={`p-3 rounded-lg border transition-all duration-300 ${
+                  className={`p-3 rounded-lg border ${
                     achievement.earned 
-                      ? 'bg-success/10 border-success/30 animate-pulse-glow' 
+                      ? 'bg-success/10 border-success/30' 
                       : 'bg-muted/30 border-muted'
                   }`}
                 >

@@ -51,7 +51,7 @@ export const Dashboard = ({ user, enrollments, onSelectSubject }: DashboardProps
               <div className="flex items-center justify-between">
                 <div>
                   <p className="text-sm text-muted-foreground">Progress</p>
-                  <p className="text-2xl font-bold animate-pulse-glow">{Math.round((mockProgress.completedLessons / mockProgress.totalLessons) * 100)}%</p>
+                  <p className="text-2xl font-bold">{Math.round((mockProgress.completedLessons / mockProgress.totalLessons) * 100)}%</p>
                 </div>
                 <div className="text-2xl animate-float">📈</div>
               </div>
@@ -88,9 +88,9 @@ export const Dashboard = ({ user, enrollments, onSelectSubject }: DashboardProps
               <div className="flex items-center justify-between">
                 <div>
                   <p className="text-sm text-muted-foreground">Streak</p>
-                  <p className="text-2xl font-bold text-warning animate-pulse-glow">{mockProgress.streak} days</p>
+                  <p className="text-2xl font-bold text-warning">{mockProgress.streak} days</p>
                 </div>
-                <div className="text-2xl animate-pulse-glow">🔥</div>
+                <div className="text-2xl">🔥</div>
               </div>
             </CardContent>
           </Card>

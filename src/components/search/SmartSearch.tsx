@@ -155,10 +155,10 @@ export const SmartSearch = ({ onSelectResult, placeholder = "Search lessons, sub
           />
           
           {/* Results Panel */}
-          <Card className="absolute top-full left-0 right-0 mt-2 z-50 shadow-floating border-glass bg-glass backdrop-blur-glass animate-spring-in">
+          <Card className="absolute top-full left-0 right-0 mt-2 z-50 shadow-floating border-glass backdrop-blur-glass animate-spring-in">
             <CardContent className="p-4">
               {/* Filters */}
-              <div className="flex items-center gap-2 mb-4 pb-3 border-b">
+              <div className="flex items-center gap-2 mb-4 pb-3 border-b overflow-x-auto">
                 <Filter className="h-4 w-4 text-muted-foreground" />
                 <span className="text-sm text-muted-foreground mr-2">Filter by:</span>
                 {filters.map((filter) => (
