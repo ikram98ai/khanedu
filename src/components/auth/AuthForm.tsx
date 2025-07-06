@@ -3,7 +3,7 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { useToast } from "@/hooks/use-toast";
+import { useAuth } from "@/hooks/useApi";
 
 interface AuthFormProps {
   mode: 'login' | 'register';
@@ -19,40 +19,22 @@ export const AuthForm = ({ mode, onToggleMode, onAuth }: AuthFormProps) => {
     first_name: '',
     last_name: ''
   });
-  const [loading, setLoading] = useState(false);
-  const { toast } = useToast();
+  
+  const { login, register, loading } = useAuth();
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    setLoading(true);
 
     try {
-      // Simulate API call
-      setTimeout(() => {
-        onAuth({
-          access: 'dummy_access_token',
-          user: {
-            id: 1,
-            username: formData.username || formData.email.split('@')[0],
-            email: formData.email,
-            first_name: formData.first_name,
-            last_name: formData.last_name,
-            is_staff: false
-          }
-        });
-        toast({
-          title: "Success!",
-          description: `Successfully ${mode === 'login' ? 'logged in' : 'registered'}!`,
-        });
-        setLoading(false);
-      }, 1000);
+      if (mode === 'login') {
+        await login(formData.email, formData.password);
+        onAuth({ user: formData });
+      } else {
+        await register(formData);
+        onAuth({ user: formData });
+      }
     } catch (error) {
-      toast({
-        title: "Error",
-        description: "Something went wrong. Please try again.",
-        variant: "destructive",
-      });
-      setLoading(false);
+      // Error handling is done in the hook
     }
   };
 

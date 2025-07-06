@@ -6,7 +6,7 @@
 
 @layer base {
   :root {
-    /* Primary Brand Colors - Professional Blue/Teal */
+    /* Primary Brand Colors - Coursera Blue */
     --background: 0 0% 100%;
     --foreground: 216 19% 16%;
 
@@ -16,9 +16,9 @@
     --popover: 0 0% 100%;
     --popover-foreground: 216 19% 16%;
 
-    --primary: 210 100% 56%;
+    --primary: 215 100% 41%;
     --primary-foreground: 0 0% 100%;
-    --primary-hover: 210 100% 48%;
+    --primary-hover: 215 100% 36%;
 
     --secondary: 210 40% 96%;
     --secondary-foreground: 216 19% 16%;
@@ -34,7 +34,7 @@
 
     --border: 220 13% 91%;
     --input: 220 13% 91%;
-    --ring: 210 100% 56%;
+    --ring: 215 100% 41%;
 
     /* Educational Platform Specific Colors */
     --success: 142 71% 45%;
@@ -46,23 +46,23 @@
 
     /* Learning Progress Colors */
     --progress-bg: 220 14% 96%;
-    --progress-fill: 210 100% 56%;
+    --progress-fill: 215 100% 41%;
     --progress-complete: 142 71% 45%;
 
     /* Interactive States */
-    --hover-overlay: 210 100% 56% / 0.1;
-    --active-overlay: 210 100% 56% / 0.2;
+    --hover-overlay: 215 100% 41% / 0.1;
+    --active-overlay: 215 100% 41% / 0.2;
 
     /* Gradients */
-    --gradient-primary: linear-gradient(135deg, hsl(210 100% 56%), hsl(186 100% 56%));
+    --gradient-primary: linear-gradient(135deg, hsl(215 100% 41%), hsl(215 85% 50%));
     --gradient-secondary: linear-gradient(135deg, hsl(220 14% 96%), hsl(210 40% 96%));
-    --gradient-hero: linear-gradient(135deg, hsl(210 100% 56%) 0%, hsl(186 100% 56%) 100%);
+    --gradient-hero: linear-gradient(135deg, hsl(215 100% 41%) 0%, hsl(215 85% 50%) 100%);
 
     /* Apple-inspired Depth & Layering System */
     --shadow-soft: 0 1px 3px 0 hsl(0 0% 0% / 0.08), 0 1px 2px -1px hsl(0 0% 0% / 0.06);
     --shadow-medium: 0 4px 12px -2px hsl(0 0% 0% / 0.12), 0 2px 8px -2px hsl(0 0% 0% / 0.08);
     --shadow-large: 0 12px 24px -4px hsl(0 0% 0% / 0.15), 0 8px 16px -4px hsl(0 0% 0% / 0.1);
-    --shadow-glow: 0 0 40px hsl(210 100% 56% / 0.3);
+    --shadow-glow: 0 0 40px hsl(215 100% 41% / 0.3);
     --shadow-elevated: 0 20px 40px -12px hsl(0 0% 0% / 0.2), 0 8px 32px -8px hsl(0 0% 0% / 0.12);
     --shadow-floating: 0 32px 64px -12px hsl(0 0% 0% / 0.25), 0 16px 48px -16px hsl(0 0% 0% / 0.15);
     --shadow-inset: inset 0 1px 0 hsl(0 0% 100% / 0.1), inset 0 -1px 0 hsl(0 0% 0% / 0.1);
@@ -116,9 +116,9 @@
     --popover: 216 19% 13%;
     --popover-foreground: 0 0% 95%;
 
-    --primary: 210 100% 65%;
+    --primary: 215 100% 55%;
     --primary-foreground: 216 19% 11%;
-    --primary-hover: 210 100% 58%;
+    --primary-hover: 215 100% 50%;
 
     --secondary: 216 19% 16%;
     --secondary-foreground: 0 0% 95%;
@@ -134,7 +134,7 @@
 
     --border: 216 19% 18%;
     --input: 216 19% 18%;
-    --ring: 210 100% 65%;
+    --ring: 215 100% 55%;
 
     /* Educational Platform Dark Mode Colors */
     --success: 142 71% 55%;
@@ -145,15 +145,15 @@
     --info-foreground: 0 0% 95%;
 
     /* Dark mode gradients */
-    --gradient-primary: linear-gradient(135deg, hsl(210 100% 65%), hsl(186 100% 65%));
+    --gradient-primary: linear-gradient(135deg, hsl(215 100% 55%), hsl(215 85% 60%));
     --gradient-secondary: linear-gradient(135deg, hsl(216 19% 16%), hsl(216 19% 20%));
-    --gradient-hero: linear-gradient(135deg, hsl(210 100% 65%) 0%, hsl(186 100% 65%) 100%);
+    --gradient-hero: linear-gradient(135deg, hsl(215 100% 55%) 0%, hsl(215 85% 60%) 100%);
 
     /* Dark mode Apple-inspired shadows */
     --shadow-soft: 0 1px 3px 0 hsl(0 0% 0% / 0.4), 0 1px 2px -1px hsl(0 0% 0% / 0.3);
     --shadow-medium: 0 4px 12px -2px hsl(0 0% 0% / 0.5), 0 2px 8px -2px hsl(0 0% 0% / 0.4);
     --shadow-large: 0 12px 24px -4px hsl(0 0% 0% / 0.6), 0 8px 16px -4px hsl(0 0% 0% / 0.5);
-    --shadow-glow: 0 0 40px hsl(210 100% 65% / 0.4);
+    --shadow-glow: 0 0 40px hsl(215 100% 55% / 0.4);
     --shadow-elevated: 0 20px 40px -12px hsl(0 0% 0% / 0.7), 0 8px 32px -8px hsl(0 0% 0% / 0.5);
     --shadow-floating: 0 32px 64px -12px hsl(0 0% 0% / 0.8), 0 16px 48px -16px hsl(0 0% 0% / 0.6);
     --shadow-inset: inset 0 1px 0 hsl(0 0% 100% / 0.05), inset 0 -1px 0 hsl(0 0% 0% / 0.2);
