@@ -1,152 +1,182 @@
+import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Progress } from "@/components/ui/progress";
-import { useLessons, useSubject } from "@/hooks/useApiQueries";
-import { ArrowLeft, BookOpen, Clock, CheckCircle } from "lucide-react";
-import { AIAssistant } from "@/components/learning/AIAssistant";
 
 interface SubjectDetailProps {
-  subjectId: number;
+  subject: any;
   onBack: () => void;
-  onLessonSelect: (subjectId: number, lessonId: number) => void;
+  onSelectLesson: (lesson: any) => void;
 }
 
-export const SubjectDetail = ({ subjectId, onBack, onLessonSelect }: SubjectDetailProps) => {
-  const { data: subject, isLoading: subjectLoading } = useSubject(subjectId);
-  const { data: lessons, isLoading: lessonsLoading } = useLessons(subjectId);
+export const SubjectDetail = ({ subject, onBack, onSelectLesson }: SubjectDetailProps) => {
 
-  const isLoading = subjectLoading || lessonsLoading;
+  const mockLessons = [
+    {
+      id: 1,
+      title: "Introduction to Algebra",
+      content: "Learn the basic concepts of algebraic expressions and equations.",
+      status: "PU",
+      unit: 0,
+      progress: 100,
+      duration: "15 min",
+    },
+    {
+      id: 2,
+      title: "Linear Equations",
+      content: "Solve linear equations step by step with practical examples.",
+      status: "PU",
+      unit: 1,
+      progress: 75,
+      duration: "20 min",
+    },
+    {
+      id: 3,
+      title: "Quadratic Equations",
+      content: "Master quadratic equations and their graphical representations.",
+      status: "PU",
+      unit: 2,
+      progress: 50,
+      duration: "25 min",
+    },
+    {
+      id: 4,
+      title: "Polynomial Functions",
+      content: "Explore polynomial functions and their properties.",
+      status: "PU",
+      unit: 3,
+      progress: 0,
+      duration: "30 min",
+    },
+    {
+      id: 5,
+      title: "Systems of Equations",
+      content: "Learn to solve systems of linear and nonlinear equations.",
+      status: "PU",
+      unit: 4,
+      progress: 0,
+      duration: "35 min",
+    }
+  ];
 
-  if (isLoading) {
-    return (
-      <div className="min-h-screen bg-gradient-to-br from-background via-primary/5 to-accent/10 p-6">
-        <div className="container mx-auto max-w-4xl">
-          <div className="animate-pulse space-y-6">
-            <div className="h-8 bg-muted rounded w-1/4"></div>
-            <div className="h-32 bg-muted rounded"></div>
-            <div className="grid gap-4 md:grid-cols-2">
-              {[1, 2, 3, 4].map((i) => (
-                <div key={i} className="h-24 bg-muted rounded"></div>
-              ))}
-            </div>
-          </div>
-        </div>
-      </div>
-    );
-  }
 
-  if (!subject) {
-    return (
-      <div className="min-h-screen bg-gradient-to-br from-background via-primary/5 to-accent/10 p-6">
-        <div className="container mx-auto max-w-4xl">
-          <Button onClick={onBack} variant="outline" className="mb-6">
-            <ArrowLeft className="mr-2 h-4 w-4" />
-            Back to Subjects
-          </Button>
-          <Card>
-            <CardContent className="p-6 text-center">
-              <p className="text-muted-foreground">Subject not found</p>
-            </CardContent>
-          </Card>
-        </div>
-      </div>
-    );
-  }
 
-  const publishedLessons = lessons?.filter(lesson => lesson.status === 'PU') || [];
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-background via-primary/5 to-accent/10 p-6">
-      <div className="container mx-auto max-w-4xl space-y-6">
-        <Button onClick={onBack} variant="outline" className="mb-6">
-          <ArrowLeft className="mr-2 h-4 w-4" />
-          Back to Subjects
-        </Button>
-
-        <Card className="border-0 bg-gradient-to-br from-card to-card/80">
-          <CardHeader>
-            <div className="flex items-center justify-between">
-              <div>
-                <CardTitle className="text-3xl font-bold">{subject.name}</CardTitle>
-                <CardDescription className="text-lg mt-2">
-                  {subject.description}
-                </CardDescription>
-              </div>
-              <Badge variant="secondary" className="bg-primary/10 text-primary text-lg px-4 py-2">
-                Grade {subject.grade_level}
-              </Badge>
-            </div>
-          </CardHeader>
-        </Card>
-
-        <div className="space-y-4">
-          <div className="flex items-center justify-between">
-            <h2 className="text-2xl font-bold">Available Lessons</h2>
-            <Badge variant="outline">
-              {publishedLessons.length} lesson{publishedLessons.length !== 1 ? 's' : ''}
+    <div className="min-h-screen bg-gradient-to-br from-background via-accent/5 to-primary/5">
+      {/* Header */}
+      <div className="bg-gradient-primary text-white px-6 py-8">
+        <div className="max-w-6xl mx-auto">
+          <Button 
+            variant="ghost" 
+            onClick={onBack}
+            className="text-white hover:bg-white/20 mb-4"
+          >
+            ← Back to Dashboard
+          </Button>
+          <h1 className="text-3xl font-bold mb-2">{subject.name}</h1>
+          <p className="text-blue-100 mb-4">{subject.description}</p>
+          <div className="flex items-center gap-3">
+            <Badge className="bg-white/20 text-white border-white/30">
+              {subject.grade_level}
             </Badge>
+            <Badge className="bg-white/20 text-white border-white/30">
+              {subject.language}
+            </Badge>
+            <span className="text-blue-100">• 5 Lessons • 2.5 hours total</span>
           </div>
+        </div>
+      </div>
 
-          {publishedLessons.length === 0 ? (
-            <Card>
-              <CardContent className="p-8 text-center">
-                <BookOpen className="mx-auto h-12 w-12 text-muted-foreground mb-4" />
-                <p className="text-lg font-medium">No lessons available yet</p>
-                <p className="text-muted-foreground">
-                  Lessons for this subject are being prepared. Check back soon!
-                </p>
+      <div className="max-w-6xl mx-auto px-6 py-8">
+        <div className="grid grid-cols-1 lg:grid-cols-4 gap-8">
+          {/* Units Sidebar */}
+          <div className="lg:col-span-1">
+
+            {/* Progress Overview */}
+            <Card className="shadow-soft mt-6">
+              <CardHeader>
+                <CardTitle>Your Progress</CardTitle>
+              </CardHeader>
+              <CardContent>
+                <div className="space-y-4">
+                  <div>
+                    <div className="flex justify-between text-sm mb-1">
+                      <span>Overall Progress</span>
+                      <span>45%</span>
+                    </div>
+                    <Progress value={45} />
+                  </div>
+                  <div className="text-sm text-muted-foreground">
+                    2 of 5 lessons completed
+                  </div>
+                </div>
               </CardContent>
             </Card>
-          ) : (
-            <div className="grid gap-4 md:grid-cols-2">
-              {publishedLessons.map((lesson, index) => (
+          </div>
+
+          {/* Lessons Content */}
+          <div className="lg:col-span-3">
+     
+            <div className="space-y-4">
+              {mockLessons.map((lesson, index) => (
                 <Card 
                   key={lesson.id} 
-                  className="group hover:shadow-lg transition-all duration-300 hover:-translate-y-1 cursor-pointer border-0 bg-gradient-to-br from-card to-card/80"
-                  onClick={() => onLessonSelect(subjectId, lesson.id)}
+                  className="shadow-soft hover:shadow-medium transition-all duration-200 cursor-pointer"
+                  onClick={() => onSelectLesson(lesson)}
                 >
-                  <CardHeader className="pb-3">
+                  <CardContent className="p-6">
                     <div className="flex items-start justify-between">
-                      <div className="flex items-center gap-3">
-                        <div className="w-10 h-10 bg-primary/10 rounded-full flex items-center justify-center">
-                          <span className="font-bold text-primary">{index + 1}</span>
-                        </div>
-                        <div>
-                          <CardTitle className="text-lg group-hover:text-primary transition-colors line-clamp-2">
-                            {lesson.title}
-                          </CardTitle>
-                          <div className="flex items-center gap-2 text-sm text-muted-foreground mt-1">
-                            <Clock className="h-3 w-3" />
-                            <span>
-                              {new Date(lesson.created_at).toLocaleDateString()}
-                            </span>
+                      <div className="flex-1">
+                        <div className="flex items-center gap-3 mb-2">
+                          <div className={`w-8 h-8 rounded-full flex items-center justify-center text-sm font-bold ${
+                            lesson.progress === 100 
+                              ? 'bg-success text-success-foreground' 
+                              : lesson.progress > 0
+                              ? 'bg-warning text-warning-foreground'
+                              : 'bg-muted text-muted-foreground'
+                          }`}>
+                            {lesson.progress === 100 ? '✓' : index + 1}
                           </div>
+                          <h3 className="text-lg font-semibold">{lesson.title}</h3>
                         </div>
+                        
+                        <p className="text-muted-foreground mb-4 ml-11">{lesson.content}</p>
+                        
+                        <div className="flex items-center gap-4 mb-3 ml-11">
+                          <div className="flex items-center gap-2 text-sm text-muted-foreground">
+                            <span>⏱️</span>
+                            <span>{lesson.duration}</span>
+                          </div>
+                       
+                        </div>
+
+                        {lesson.progress > 0 && (
+                          <div className="ml-11">
+                            <div className="flex justify-between text-sm mb-1">
+                              <span>Progress</span>
+                              <span>{lesson.progress}%</span>
+                            </div>
+                            <Progress value={lesson.progress} className="w-full max-w-xs" />
+                          </div>
+                        )}
                       </div>
-                      {lesson.verified_at && (
-                        <CheckCircle className="h-5 w-5 text-green-500" />
-                      )}
-                    </div>
-                  </CardHeader>
-                  <CardContent>
-                    <div className="flex items-center justify-between">
-                      <Badge variant={lesson.status === 'PU' ? 'default' : 'secondary'}>
-                        {lesson.status === 'PU' ? 'Published' : 'Draft'}
-                      </Badge>
-                      <span className="text-sm text-muted-foreground">
-                        By {lesson.instructor}
-                      </span>
+                      
+                      <Button 
+                        variant={lesson.progress === 100 ? "secondary" : lesson.progress > 0 ? "outline" : "default"}
+                        size="sm"
+                      >
+                        {lesson.progress === 100 ? 'Review' : lesson.progress > 0 ? 'Continue' : 'Start'}
+                      </Button>
                     </div>
                   </CardContent>
                 </Card>
               ))}
             </div>
-          )}
+          </div>
         </div>
       </div>
-      
-      <AIAssistant subject={subject?.name} />
     </div>
   );
 };

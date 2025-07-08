@@ -3,7 +3,7 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { useAuth } from "@/providers/AuthProvider";
+import { useAuth } from "@/hooks/useApi";
 
 interface AuthFormProps {
   mode: 'login' | 'register';
@@ -28,13 +28,13 @@ export const AuthForm = ({ mode, onToggleMode, onAuth }: AuthFormProps) => {
     try {
       if (mode === 'login') {
         await login(formData.email, formData.password);
-        onAuth({ success: true });
+        onAuth({ user: formData });
       } else {
         await register(formData);
-        onAuth({ success: true });
+        onAuth({ user: formData });
       }
     } catch (error) {
-      // Error handling is done in the auth store
+      // Error handling is done in the hook
     }
   };
 

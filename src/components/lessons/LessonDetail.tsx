@@ -3,222 +3,270 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { useLesson, useQuizzes, usePracticeTasks, useSubmitQuiz, useSubject } from "@/hooks/useApiQueries";
-import { ArrowLeft, BookOpen, Brain, Trophy, CheckCircle, X } from "lucide-react";
-import { AIAssistant } from "@/components/learning/AIAssistant";
+import { Progress } from "@/components/ui/progress";
+import { useToast } from "@/hooks/use-toast";
 
 interface LessonDetailProps {
-  subjectId: number;
-  lessonId: number;
+  lesson: any;
+  subject: any;
   onBack: () => void;
 }
 
-export const LessonDetail = ({ subjectId, lessonId, onBack }: LessonDetailProps) => {
-  const [quizAnswers, setQuizAnswers] = useState<Record<number, string>>({});
-  const [activeQuiz, setActiveQuiz] = useState<number | null>(null);
+export const LessonDetail = ({ lesson, subject, onBack }: LessonDetailProps) => {
+  const [activeTab, setActiveTab] = useState("content");
+  const [quizStarted, setQuizStarted] = useState(false);
+  const [currentQuestion, setCurrentQuestion] = useState(0);
+  const [selectedAnswers, setSelectedAnswers] = useState<Record<number, string>>({});
+  const { toast } = useToast();
 
-  const { data: lesson, isLoading: lessonLoading } = useLesson(subjectId, lessonId);
-  const { data: subject } = useSubject(subjectId);
-  const { data: quizzes, isLoading: quizzesLoading } = useQuizzes(subjectId, lessonId);
-  const { data: practiceTasks, isLoading: tasksLoading } = usePracticeTasks(subjectId, lessonId);
-  const submitQuizMutation = useSubmitQuiz();
-
-  const isLoading = lessonLoading || quizzesLoading || tasksLoading;
-
-  const handleQuizAnswer = (questionId: number, answer: string) => {
-    setQuizAnswers(prev => ({ ...prev, [questionId]: answer }));
+  const mockQuiz = {
+    id: 1,
+    questions: [
+      {
+        id: 1,
+        question_text: "What is the standard form of a linear equation?",
+        options: ["y = mx + b", "ax + by + c = 0", "y = ax² + bx + c", "x = y + 1"],
+        correct_answer: "y = mx + b"
+      },
+      {
+        id: 2,
+        question_text: "If 2x + 5 = 15, what is the value of x?",
+        options: ["5", "10", "7.5", "2.5"],
+        correct_answer: "5"
+      },
+      {
+        id: 3,
+        question_text: "Which of the following is NOT a linear equation?",
+        options: ["3x + 2y = 6", "x² + y = 5", "2x - y = 4", "x + y = 10"],
+        correct_answer: "x² + y = 5"
+      }
+    ]
   };
 
-  const handleQuizSubmit = async (quizId: number) => {
-    const quiz = quizzes?.find(q => q.id === quizId);
-    if (!quiz) return;
+  const mockTasks = [
+    {
+      id: 1,
+      content: "Solve the equation: 3x + 7 = 22",
+      solution: "x = 5"
+    },
+    {
+      id: 2,
+      content: "Find the slope and y-intercept of the line y = -2x + 3",
+      solution: "Slope = -2, y-intercept = 3"
+    },
+    {
+      id: 3,
+      content: "Graph the equation y = 2x - 1 and identify where it crosses the axes",
+      solution: "x-intercept at (0.5, 0), y-intercept at (0, -1)"
+    }
+  ];
 
-    const responses = quiz.questions.map(question => ({
-      question_id: question.id,
-      answer: quizAnswers[question.id] || ''
+  const handleQuizAnswer = (questionId: number, answer: string) => {
+    setSelectedAnswers(prev => ({
+      ...prev,
+      [questionId]: answer
     }));
+  };
 
-    try {
-      await submitQuizMutation.mutateAsync({
-        quiz_id: quizId,
-        responses
+  const nextQuestion = () => {
+    if (currentQuestion < mockQuiz.questions.length - 1) {
+      setCurrentQuestion(prev => prev + 1);
+    } else {
+      // Quiz completed
+      const score = mockQuiz.questions.reduce((acc, question) => {
+        return acc + (selectedAnswers[question.id] === question.correct_answer ? 1 : 0);
+      }, 0);
+      
+      const percentage = Math.round((score / mockQuiz.questions.length) * 100);
+      
+      toast({
+        title: "Quiz Completed!",
+        description: `You scored ${score}/${mockQuiz.questions.length} (${percentage}%)`,
+        variant: percentage >= 70 ? "default" : "destructive"
       });
-      setActiveQuiz(null);
-      setQuizAnswers({});
-    } catch (error) {
-      // Error handled by mutation
+      
+      setQuizStarted(false);
+      setCurrentQuestion(0);
+      setSelectedAnswers({});
     }
   };
 
-  if (isLoading) {
-    return (
-      <div className="min-h-screen bg-gradient-to-br from-background via-primary/5 to-accent/10 p-6">
-        <div className="container mx-auto max-w-4xl">
-          <div className="animate-pulse space-y-6">
-            <div className="h-8 bg-muted rounded w-1/4"></div>
-            <div className="h-32 bg-muted rounded"></div>
-            <div className="h-96 bg-muted rounded"></div>
+ 
+  return (
+    <div className="min-h-screen bg-gradient-to-br from-background via-accent/5 to-primary/5">
+      {/* Header */}
+      <div className="bg-gradient-primary text-white px-6 py-6">
+        <div className="max-w-4xl mx-auto">
+          <Button 
+            variant="ghost" 
+            onClick={onBack}
+            className="text-white hover:bg-white/20 mb-4"
+          >
+            ← Back to {subject.name}
+          </Button>
+          <h1 className="text-2xl font-bold mb-2">{lesson.title}</h1>
+          <div className="flex items-center gap-3">
+            <Badge className="bg-white/20 text-white border-white/30">
+              {lesson.duration}
+            </Badge>
+       
+            <span className="text-blue-100">• Progress: {lesson.progress}%</span>
           </div>
         </div>
       </div>
-    );
-  }
 
-  if (!lesson) {
-    return (
-      <div className="min-h-screen bg-gradient-to-br from-background via-primary/5 to-accent/10 p-6">
-        <div className="container mx-auto max-w-4xl">
-          <Button onClick={onBack} variant="outline" className="mb-6">
-            <ArrowLeft className="mr-2 h-4 w-4" />
-            Back to Lessons
-          </Button>
-          <Card>
-            <CardContent className="p-6 text-center">
-              <p className="text-muted-foreground">Lesson not found</p>
-            </CardContent>
-          </Card>
-        </div>
-      </div>
-    );
-  }
-
-  return (
-    <div className="min-h-screen bg-gradient-to-br from-background via-primary/5 to-accent/10 p-6">
-      <div className="container mx-auto max-w-4xl space-y-6">
-        <Button onClick={onBack} variant="outline">
-          <ArrowLeft className="mr-2 h-4 w-4" />
-          Back to Lessons
-        </Button>
-
-        <Card className="border-0 bg-gradient-to-br from-card to-card/80">
-          <CardHeader>
-            <CardTitle className="text-3xl font-bold">{lesson.title}</CardTitle>
-            <div className="flex items-center gap-4 mt-2">
-              <Badge variant="secondary">By {lesson.instructor}</Badge>
-              <Badge variant={lesson.status === 'PU' ? 'default' : 'secondary'}>
-                {lesson.status === 'PU' ? 'Published' : 'Draft'}
-              </Badge>
-              {lesson.verified_at && (
-                <Badge variant="outline" className="text-green-600 border-green-600">
-                  <CheckCircle className="mr-1 h-3 w-3" />
-                  Verified
-                </Badge>
-              )}
-            </div>
-          </CardHeader>
-        </Card>
-
-        <Tabs defaultValue="content" className="space-y-6">
+      <div className="max-w-4xl mx-auto px-6 py-8">
+        <Tabs value={activeTab} onValueChange={setActiveTab}>
           <TabsList className="grid w-full grid-cols-3">
-            <TabsTrigger value="content">
-              <BookOpen className="mr-2 h-4 w-4" />
-              Content
-            </TabsTrigger>
-            <TabsTrigger value="quiz">
-              <Brain className="mr-2 h-4 w-4" />
-              Quiz ({quizzes?.length || 0})
-            </TabsTrigger>
-            <TabsTrigger value="practice">
-              <Trophy className="mr-2 h-4 w-4" />
-              Practice ({practiceTasks?.length || 0})
-            </TabsTrigger>
+            <TabsTrigger value="content">📖 Content</TabsTrigger>
+            <TabsTrigger value="practice">✏️ Practice</TabsTrigger>
+            <TabsTrigger value="quiz">🎯 Quiz</TabsTrigger>
           </TabsList>
 
-          <TabsContent value="content">
-            <Card>
+          <TabsContent value="content" className="mt-6">
+            <Card className="shadow-soft">
               <CardHeader>
                 <CardTitle>Lesson Content</CardTitle>
+                <CardDescription>Learn the core concepts</CardDescription>
               </CardHeader>
-              <CardContent className="prose prose-sm max-w-none">
-                <div dangerouslySetInnerHTML={{ __html: lesson.content }} />
+              <CardContent className="prose max-w-none">
+                <div className="space-y-4">
+                  <h3 className="text-xl font-semibold">Introduction to Linear Equations</h3>
+                  <p className="text-muted-foreground leading-relaxed">
+                    A linear equation is an algebraic equation where the highest power of the variable is 1. 
+                    Linear equations form straight lines when graphed and are fundamental to understanding algebra.
+                  </p>
+                  
+                  <h4 className="text-lg font-medium">Key Concepts:</h4>
+                  <ul className="list-disc list-inside space-y-2 text-muted-foreground">
+                    <li>Standard form: ax + by = c</li>
+                    <li>Slope-intercept form: y = mx + b</li>
+                    <li>Point-slope form: y - y₁ = m(x - x₁)</li>
+                  </ul>
+
+                  <div className="bg-accent/20 p-4 rounded-lg">
+                    <h4 className="font-medium mb-2">Example:</h4>
+                    <p>Solve for x: 2x + 3 = 11</p>
+                    <div className="mt-2 space-y-1 text-sm">
+                      <p>Step 1: Subtract 3 from both sides → 2x = 8</p>
+                      <p>Step 2: Divide both sides by 2 → x = 4</p>
+                    </div>
+                  </div>
+
+                  <Button variant="gradient" className="mt-6">
+                    Mark as Complete
+                  </Button>
+                </div>
               </CardContent>
             </Card>
           </TabsContent>
 
-          <TabsContent value="quiz" className="space-y-4">
-            {quizzes?.map((quiz) => (
-              <Card key={quiz.id}>
-                <CardHeader>
-                  <div className="flex items-center justify-between">
-                    <div>
-                      <CardTitle>Quiz #{quiz.version}</CardTitle>
-                      <CardDescription>
-                        {quiz.questions.length} question{quiz.questions.length !== 1 ? 's' : ''}
-                        {quiz.ai_generated && (
-                          <Badge variant="outline" className="ml-2">AI Generated</Badge>
-                        )}
-                      </CardDescription>
+          <TabsContent value="practice" className="mt-6">
+            <div className="space-y-4">
+              <h2 className="text-xl font-bold">Practice Problems</h2>
+              {mockTasks.map((task, index) => (
+                <Card key={task.id} className="shadow-soft">
+                  <CardHeader>
+                    <div className="flex items-center justify-between">
+                      <CardTitle className="text-lg">Problem {index + 1}</CardTitle>
+                   
                     </div>
-                    {activeQuiz !== quiz.id && (
-                      <Button onClick={() => setActiveQuiz(quiz.id)}>
-                        Start Quiz
-                      </Button>
-                    )}
-                  </div>
-                </CardHeader>
-
-                {activeQuiz === quiz.id && (
-                  <CardContent className="space-y-6">
-                    {quiz.questions.map((question, index) => (
-                      <div key={question.id} className="space-y-3">
-                        <h4 className="font-medium">
-                          {index + 1}. {question.question_text}
-                        </h4>
-                        <input
-                          type="text"
-                          className="w-full p-3 border rounded-md"
-                          placeholder="Enter your answer..."
-                          value={quizAnswers[question.id] || ''}
-                          onChange={(e) => handleQuizAnswer(question.id, e.target.value)}
-                        />
+                  </CardHeader>
+                  <CardContent>
+                    <p className="mb-4">{task.content}</p>
+                    <details className="cursor-pointer">
+                      <summary className="text-primary hover:underline">Show Solution</summary>
+                      <div className="mt-2 p-3 bg-muted/50 rounded">
+                        <strong>Solution:</strong> {task.solution}
                       </div>
-                    ))}
-                    
-                    <div className="flex gap-2 pt-4">
-                      <Button 
-                        onClick={() => handleQuizSubmit(quiz.id)}
-                        disabled={submitQuizMutation.isPending}
-                      >
-                        {submitQuizMutation.isPending ? 'Submitting...' : 'Submit Quiz'}
-                      </Button>
-                      <Button 
-                        variant="outline" 
-                        onClick={() => setActiveQuiz(null)}
-                      >
-                        Cancel
-                      </Button>
-                    </div>
+                    </details>
                   </CardContent>
-                )}
-              </Card>
-            ))}
+                </Card>
+              ))}
+            </div>
           </TabsContent>
 
-          <TabsContent value="practice" className="space-y-4">
-            {practiceTasks?.map((task) => (
-              <Card key={task.id}>
+          <TabsContent value="quiz" className="mt-6">
+            {!quizStarted ? (
+              <Card className="shadow-soft">
                 <CardHeader>
-                  <CardTitle>Practice Task</CardTitle>
-                  <Badge variant={
-                    task.difficulty === 'EA' ? 'secondary' :
-                    task.difficulty === 'ME' ? 'default' : 'destructive'
-                  }>
-                    {task.difficulty === 'EA' ? 'Easy' :
-                     task.difficulty === 'ME' ? 'Medium' : 'Hard'}
-                  </Badge>
+                  <CardTitle>Knowledge Check Quiz</CardTitle>
+                  <CardDescription>
+                    Test your understanding with {mockQuiz.questions.length} questions
+                  </CardDescription>
                 </CardHeader>
                 <CardContent>
-                  <div className="prose prose-sm max-w-none">
-                    <div dangerouslySetInnerHTML={{ __html: task.content }} />
+                  <div className="space-y-4">
+                    <div className="flex items-center gap-4">
+                      <div className="text-2xl">🧠</div>
+                      <div>
+                        <p className="font-medium">Ready to test your knowledge?</p>
+                        <p className="text-sm text-muted-foreground">
+                          You need 70% or higher to pass
+                        </p>
+                      </div>
+                    </div>
+                    <Button 
+                      variant="gradient" 
+                      onClick={() => setQuizStarted(true)}
+                      size="lg"
+                    >
+                      Start Quiz
+                    </Button>
                   </div>
                 </CardContent>
               </Card>
-            ))}
+            ) : (
+              <Card className="shadow-soft">
+                <CardHeader>
+                  <div className="flex items-center justify-between">
+                    <CardTitle>Question {currentQuestion + 1} of {mockQuiz.questions.length}</CardTitle>
+                    <Progress value={((currentQuestion + 1) / mockQuiz.questions.length) * 100} className="w-32" />
+                  </div>
+                </CardHeader>
+                <CardContent>
+                  <div className="space-y-6">
+                    <h3 className="text-lg font-medium">
+                      {mockQuiz.questions[currentQuestion].question_text}
+                    </h3>
+                    
+                    <div className="space-y-3">
+                      {mockQuiz.questions[currentQuestion].options.map((option, index) => (
+                        <label
+                          key={index}
+                          className={`flex items-center p-3 rounded-lg border cursor-pointer transition-all duration-200 ${
+                            selectedAnswers[mockQuiz.questions[currentQuestion].id] === option
+                              ? 'border-primary bg-primary/10'
+                              : 'border-border hover:bg-muted/50'
+                          }`}
+                        >
+                          <input
+                            type="radio"
+                            name={`question-${currentQuestion}`}
+                            value={option}
+                            checked={selectedAnswers[mockQuiz.questions[currentQuestion].id] === option}
+                            onChange={() => handleQuizAnswer(mockQuiz.questions[currentQuestion].id, option)}
+                            className="mr-3"
+                          />
+                          <span>{option}</span>
+                        </label>
+                      ))}
+                    </div>
+
+                    <Button 
+                      onClick={nextQuestion}
+                      disabled={!selectedAnswers[mockQuiz.questions[currentQuestion].id]}
+                      className="w-full"
+                    >
+                      {currentQuestion === mockQuiz.questions.length - 1 ? 'Finish Quiz' : 'Next Question'}
+                    </Button>
+                  </div>
+                </CardContent>
+              </Card>
+            )}
           </TabsContent>
         </Tabs>
       </div>
-      
-      <AIAssistant subject={subject?.name} lesson={lesson?.title} />
     </div>
   );
 };

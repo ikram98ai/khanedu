@@ -1,212 +1,201 @@
-import { useState } from "react";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { Badge } from "@/components/ui/badge";
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Progress } from "@/components/ui/progress";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { Breadcrumb } from "@/components/navigation/Breadcrumb";
+import { Badge } from "@/components/ui/badge";
 import { SmartSearch } from "@/components/search/SmartSearch";
-import { AIAssistant } from "@/components/learning/AIAssistant";
 import { ProgressAnalytics } from "@/components/learning/ProgressAnalytics";
-import { useStudentDashboard, useSubjects } from "@/hooks/useApiQueries";
-import { useAuth } from "@/providers/AuthProvider";
-import { SubjectDetail } from "@/components/subjects/SubjectDetail";
-import { LessonDetail } from "@/components/lessons/LessonDetail";
-import { User } from "lucide-react";
-import { Link } from "react-router-dom";
 
-export const Dashboard = () => {
-  const [selectedSubject, setSelectedSubject] = useState<number | null>(null);
-  const [selectedLesson, setSelectedLesson] = useState<{ subjectId: number; lessonId: number } | null>(null);
-  const [searchQuery, setSearchQuery] = useState("");
-  
-  const { user, profile, logout } = useAuth();
-  const { data: dashboardData, isLoading: dashboardLoading } = useStudentDashboard();
-  const { data: subjects, isLoading: subjectsLoading } = useSubjects({
-    grade_level: profile?.current_grade ? parseInt(profile.current_grade.replace('GR', '')) : undefined,
-    language: profile?.language,
-    search: searchQuery || undefined
-  });
+interface DashboardProps {
+  user: any;
+  enrollments: any[];
+  onSelectSubject: (subject: any) => void;
+}
 
-  const handleSubjectSelect = (subjectId: number) => {
-    setSelectedSubject(subjectId);
-    setSelectedLesson(null);
+export const Dashboard = ({ user, enrollments, onSelectSubject }: DashboardProps) => {
+  const mockProgress = {
+    completedLessons: 12,
+    totalLessons: 45,
+    avgScore: 85,
+    streak: 7
   };
 
-  const handleLessonSelect = (subjectId: number, lessonId: number) => {
-    setSelectedLesson({ subjectId, lessonId });
-  };
-
-  const handleBackToSubjects = () => {
-    setSelectedSubject(null);
-    setSelectedLesson(null);
-  };
-
-  const handleBackToLessons = () => {
-    setSelectedLesson(null);
-  };
-
-  const isLoading = dashboardLoading || subjectsLoading;
-
-  // Render lesson detail view
-  if (selectedLesson) {
-    return (
-      <LessonDetail
-        subjectId={selectedLesson.subjectId}
-        lessonId={selectedLesson.lessonId}
-        onBack={handleBackToLessons}
-      />
-    );
-  }
-
-  // Render subject detail view
-  if (selectedSubject) {
-    return (
-      <SubjectDetail
-        subjectId={selectedSubject}
-        onBack={handleBackToSubjects}
-        onLessonSelect={handleLessonSelect}
-      />
-    );
-  }
+  const mockRecentActivity = [
+    { id: 1, subject: "Mathematics", lesson: "Algebra Basics", score: 90, completedAt: "2 hours ago" },
+    { id: 2, subject: "Science", lesson: "Chemical Reactions", score: 85, completedAt: "1 day ago" },
+    { id: 3, subject: "Language Arts", lesson: "Creative Writing", score: 95, completedAt: "2 days ago" },
+  ];
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-background via-primary/5 to-accent/10">
+    <div className="min-h-screen bg-gradient-to-br from-background via-accent/5 to-primary/5">
       {/* Header */}
-      <header className="border-b bg-card/50 backdrop-blur-sm sticky top-0 z-50">
-        <div className="container mx-auto px-4 py-4">
-          <div className="flex items-center justify-between">
-            <div className="flex items-center gap-4">
-              <div className="w-10 h-10 bg-gradient-primary rounded-full flex items-center justify-center">
-                <span className="text-xl font-bold text-white">E</span>
+      <div className="bg-gradient-primary text-white px-6 py-8">
+        <div className="max-w-6xl mx-auto">
+          <h1 className="text-3xl font-bold mb-2">
+            Welcome back, {user.first_name}! 👋
+          </h1>
+          <p className="text-blue-100">
+            Ready to continue your learning journey?
+          </p>
+        </div>
+      </div>
+
+      <div className="max-w-6xl mx-auto px-6 py-8">
+        {/* Smart Search */}
+        <div className="mb-8 flex justify-center">
+          <SmartSearch onSelectResult={(result) => console.log('Selected:', result)} />
+        </div>
+        {/* Stats Overview with staggered animations */}
+        <div className="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8">
+          <Card variant="elevated" className="animate-spring-in" style={{ animationDelay: '0.1s' }}>
+            <CardContent className="p-6">
+              <div className="flex items-center justify-between">
+                <div>
+                  <p className="text-sm text-muted-foreground">Progress</p>
+                  <p className="text-2xl font-bold">{Math.round((mockProgress.completedLessons / mockProgress.totalLessons) * 100)}%</p>
+                </div>
+                <div className="text-2xl animate-float">📈</div>
               </div>
-              <div>
-                <h1 className="text-2xl font-bold">EduPlatform</h1>
-                <p className="text-sm text-muted-foreground">
-                  Welcome back, {user?.first_name || 'Student'}!
-                </p>
+              <Progress value={(mockProgress.completedLessons / mockProgress.totalLessons) * 100} className="mt-2" />
+            </CardContent>
+          </Card>
+
+          <Card variant="elevated" className="animate-spring-in" style={{ animationDelay: '0.2s' }}>
+            <CardContent className="p-6">
+              <div className="flex items-center justify-between">
+                <div>
+                  <p className="text-sm text-muted-foreground">Avg Score</p>
+                  <p className="text-2xl font-bold text-success">{mockProgress.avgScore}%</p>
+                </div>
+                <div className="text-2xl animate-float" style={{ animationDelay: '0.5s' }}>🎯</div>
               </div>
-            </div>
-            
-            <div className="flex items-center gap-4">
-              <SmartSearch 
-                onSelectResult={(result) => {
-                  if (result.type === 'subject') {
-                    handleSubjectSelect(parseInt(result.id));
-                  }
-                }}
-                placeholder="Search subjects, lessons..."
-              />
-              <Link to="/profile">
-                <Button variant="outline" size="sm" className="flex items-center gap-2">
-                  <User className="h-4 w-4" />
-                  Profile
-                </Button>
-              </Link>
-              <Button variant="outline" size="sm" onClick={logout}>
-                Logout
-              </Button>
+            </CardContent>
+          </Card>
+
+          <Card variant="elevated" className="animate-spring-in" style={{ animationDelay: '0.3s' }}>
+            <CardContent className="p-6">
+              <div className="flex items-center justify-between">
+                <div>
+                  <p className="text-sm text-muted-foreground">Lessons</p>
+                  <p className="text-2xl font-bold">{mockProgress.completedLessons}/{mockProgress.totalLessons}</p>
+                </div>
+                <div className="text-2xl animate-float" style={{ animationDelay: '1s' }}>📚</div>
+              </div>
+            </CardContent>
+          </Card>
+
+          <Card variant="floating" className="animate-spring-in" style={{ animationDelay: '0.4s' }}>
+            <CardContent className="p-6">
+              <div className="flex items-center justify-between">
+                <div>
+                  <p className="text-sm text-muted-foreground">Streak</p>
+                  <p className="text-2xl font-bold text-warning">{mockProgress.streak} days</p>
+                </div>
+                <div className="text-2xl">🔥</div>
+              </div>
+            </CardContent>
+          </Card>
+        </div>
+
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+          {/* Enrolled Subjects */}
+          <div className="animate-slide-up-fade" style={{ animationDelay: '0.6s' }}>
+            <h2 className="text-2xl font-bold mb-6">Your Subjects</h2>
+            <div className="space-y-4">
+              {enrollments.map((subject, index) => (
+                <Card 
+                  key={subject.id} 
+                  variant="interactive"
+                  className="animate-spring-in"
+                  style={{ animationDelay: `${0.8 + (index * 0.1)}s` }}
+                  onClick={() => onSelectSubject(subject)}
+                >
+                  <CardContent className="p-6">
+                    <div className="flex items-start justify-between">
+                      <div className="flex-1">
+                        <h3 className="text-lg font-semibold mb-2">{subject.name}</h3>
+                        <p className="text-muted-foreground text-sm mb-3">{subject.description}</p>
+                        
+                        <div className="flex items-center gap-2 mb-3">
+                          <Badge variant="secondary">
+                            {subject.grade_level}
+                          </Badge>
+                          <Badge variant="outline">
+                            {subject.language}
+                          </Badge>
+                        </div>
+
+                        <div className="flex items-center justify-between">
+                          <div className="text-sm text-muted-foreground">
+                            Progress: {20 + (index * 25)}% complete
+                          </div>
+                          <Button variant="glass" size="sm">
+                            Continue Learning
+                          </Button>
+                        </div>
+                        
+                        <Progress value={20 + (index * 25)} className="mt-2" />
+                      </div>
+                    </div>
+                  </CardContent>
+                </Card>
+              ))}
             </div>
           </div>
-        </div>
-      </header>
 
-      {/* Main Content */}
-      <main className="container mx-auto px-4 py-8">
-        <Tabs defaultValue="subjects" className="space-y-8">
-          <TabsList className="grid w-full grid-cols-3">
-            <TabsTrigger value="subjects">My Subjects</TabsTrigger>
-            <TabsTrigger value="progress">Progress</TabsTrigger>
-            <TabsTrigger value="activity">Recent Activity</TabsTrigger>
-          </TabsList>
-
-          <TabsContent value="subjects" className="space-y-6">
-            {isLoading ? (
-              <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
-                {[1, 2, 3].map((i) => (
-                  <Card key={i} className="animate-pulse">
-                    <CardHeader>
-                      <div className="h-4 bg-muted rounded w-3/4"></div>
-                      <div className="h-3 bg-muted rounded w-full"></div>
-                    </CardHeader>
-                    <CardContent>
-                      <div className="space-y-3">
-                        <div className="h-2 bg-muted rounded w-full"></div>
-                        <div className="h-8 bg-muted rounded w-full"></div>
+          {/* Recent Activity */}
+          <div className="animate-slide-up-fade" style={{ animationDelay: '0.7s' }}>
+            <h2 className="text-2xl font-bold mb-6">Recent Activity</h2>
+            <Card variant="glass" className="animate-spring-in" style={{ animationDelay: '0.9s' }}>
+              <CardContent className="p-6">
+                <div className="space-y-4">
+                  {mockRecentActivity.map((activity, index) => (
+                    <div 
+                      key={activity.id} 
+                      className="flex items-center justify-between p-3 bg-surface-hover rounded-lg hover:bg-surface-pressed transition-all duration-300 animate-spring-in"
+                      style={{ animationDelay: `${1.1 + (index * 0.1)}s` }}
+                    >
+                      <div>
+                        <p className="font-medium">{activity.lesson}</p>
+                        <p className="text-sm text-muted-foreground">{activity.subject}</p>
+                        <p className="text-xs text-muted-foreground">{activity.completedAt}</p>
                       </div>
-                    </CardContent>
-                  </Card>
-                ))}
-              </div>
-            ) : (
-              <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
-                {subjects?.map((subject) => (
-                  <Card key={subject.id} className="group hover:shadow-lg transition-all duration-300 hover:-translate-y-1 cursor-pointer border-0 bg-gradient-to-br from-card to-card/80">
-                    <CardHeader className="pb-3">
-                      <div className="flex items-center justify-between">
-                        <CardTitle className="text-lg group-hover:text-primary transition-colors">{subject.name}</CardTitle>
-                        <Badge variant="secondary" className="bg-primary/10 text-primary">
-                          Grade {subject.grade_level}
-                        </Badge>
-                      </div>
-                      <CardDescription>{subject.description}</CardDescription>
-                    </CardHeader>
-                    <CardContent className="space-y-4">
-                      <Button 
-                        className="w-full group-hover:bg-primary group-hover:text-primary-foreground transition-colors" 
-                        variant="outline"
-                        onClick={() => handleSubjectSelect(subject.id)}
-                      >
-                        View Lessons
-                      </Button>
-                    </CardContent>
-                  </Card>
-                ))}
-              </div>
-            )}
-          </TabsContent>
-
-          <TabsContent value="progress" className="space-y-6">
-            <ProgressAnalytics />
-          </TabsContent>
-
-          <TabsContent value="activity" className="space-y-6">
-            <Card>
-              <CardHeader>
-                <CardTitle>Recent Activity</CardTitle>
-                <CardDescription>Your latest learning activities</CardDescription>
-              </CardHeader>
-              <CardContent>
-                {dashboardData?.recent_attempts && dashboardData.recent_attempts.length > 0 ? (
-                  <div className="space-y-4">
-                    {dashboardData.recent_attempts.map((attempt) => (
-                      <div key={attempt.id} className="flex items-center justify-between p-4 border rounded-lg">
-                        <div>
-                          <p className="font-medium">Quiz Attempt</p>
-                          <p className="text-sm text-muted-foreground">
-                            {new Date(attempt.end_time).toLocaleDateString()}
-                          </p>
-                        </div>
-                        <Badge variant={attempt.passed ? "default" : "secondary"}>
-                          {attempt.score.toFixed(1)}%
-                        </Badge>
-                      </div>
-                    ))}
-                  </div>
-                ) : (
-                  <div className="text-center py-8">
-                    <p className="text-muted-foreground">No recent activity yet</p>
-                    <p className="text-sm text-muted-foreground">Start learning to see your activity here</p>
-                  </div>
-                )}
+                      <Badge variant={activity.score >= 90 ? "default" : activity.score >= 80 ? "secondary" : "outline"}>
+                        {activity.score}%
+                      </Badge>
+                    </div>
+                  ))}
+                </div>
               </CardContent>
             </Card>
-          </TabsContent>
-        </Tabs>
-      </main>
 
-      {/* AI Assistant */}
-      <AIAssistant />
+            {/* Quick Actions */}
+            <Card variant="floating" className="mt-6 animate-spring-in" style={{ animationDelay: '1.2s' }}>
+              <CardHeader>
+                <CardTitle>Quick Actions</CardTitle>
+                <CardDescription>Jump back into your learning</CardDescription>
+              </CardHeader>
+              <CardContent>
+                <div className="space-y-2">
+                  <Button variant="glass" className="w-full justify-start">
+                    📝 Take a Practice Quiz
+                  </Button>
+                  <Button variant="glass" className="w-full justify-start">
+                    📖 Review Past Lessons
+                  </Button>
+                  <Button variant="glass" className="w-full justify-start">
+                    🎯 View Learning Goals
+                  </Button>
+                </div>
+              </CardContent>
+            </Card>
+          </div>
+        </div>
+
+        {/* Progress Analytics */}
+        <div className="mt-12">
+          <ProgressAnalytics user={user} enrollments={enrollments} />
+        </div>
+      </div>
     </div>
   );
 };

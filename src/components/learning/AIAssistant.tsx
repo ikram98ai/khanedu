@@ -5,7 +5,6 @@ import { Input } from "@/components/ui/input";
 import { Badge } from "@/components/ui/badge";
 import { Sparkles, Send, Lightbulb, Brain, Target } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
-import { useAIAssistance } from "@/hooks/useApiQueries";
 
 interface Message {
   id: string;
@@ -27,7 +26,6 @@ export const AIAssistant = ({ subject, lesson, onClose }: AIAssistantProps) => {
   const [isLoading, setIsLoading] = useState(false);
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const { toast } = useToast();
-  const aiAssistanceMutation = useAIAssistance();
 
   const scrollToBottom = () => {
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
@@ -64,24 +62,8 @@ export const AIAssistant = ({ subject, lesson, onClose }: AIAssistantProps) => {
     setInput("");
     setIsLoading(true);
 
-    // Use real AI assistance API
-    try {
-      const context = `Subject: ${subject || 'General'}, Lesson: ${lesson || 'N/A'}`;
-      const result = await aiAssistanceMutation.mutateAsync({
-        message: input,
-        context
-      });
-
-      const assistantMessage: Message = {
-        id: (Date.now() + 1).toString(),
-        content: result.response,
-        type: 'assistant',
-        timestamp: new Date()
-      };
-
-      setMessages(prev => [...prev, assistantMessage]);
-    } catch (error) {
-      // Fallback to sample responses if API fails
+    // Simulate AI response with contextual learning assistance
+    setTimeout(() => {
       const responses = [
         "That's a great question! Let me break this down for you step by step...",
         "I can help you understand this concept better. Here's a simple way to think about it...",
@@ -98,9 +80,8 @@ export const AIAssistant = ({ subject, lesson, onClose }: AIAssistantProps) => {
       };
 
       setMessages(prev => [...prev, assistantMessage]);
-    } finally {
       setIsLoading(false);
-    }
+    }, 1000 + Math.random() * 1000);
   };
 
   const quickActions = [
@@ -213,7 +194,7 @@ export const AIAssistant = ({ subject, lesson, onClose }: AIAssistantProps) => {
           />
           <Button
             onClick={handleSend}
-            disabled={!input.trim() || isLoading || aiAssistanceMutation.isPending}
+            disabled={!input.trim() || isLoading}
             size="sm"
           >
             <Send className="h-4 w-4" />
