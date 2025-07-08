@@ -4,6 +4,7 @@ import { Badge } from "@/components/ui/badge";
 import { Progress } from "@/components/ui/progress";
 import { useLessons, useSubject } from "@/hooks/useApiQueries";
 import { ArrowLeft, BookOpen, Clock, CheckCircle } from "lucide-react";
+import { AIAssistant } from "@/components/learning/AIAssistant";
 
 interface SubjectDetailProps {
   subjectId: number;
@@ -144,6 +145,8 @@ export const SubjectDetail = ({ subjectId, onBack, onLessonSelect }: SubjectDeta
           )}
         </div>
       </div>
+      
+      <AIAssistant subject={subject?.name} />
     </div>
   );
 };

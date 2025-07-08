@@ -12,6 +12,8 @@ import { useStudentDashboard, useSubjects } from "@/hooks/useApiQueries";
 import { useAuth } from "@/providers/AuthProvider";
 import { SubjectDetail } from "@/components/subjects/SubjectDetail";
 import { LessonDetail } from "@/components/lessons/LessonDetail";
+import { User } from "lucide-react";
+import { Link } from "react-router-dom";
 
 export const Dashboard = () => {
   const [selectedSubject, setSelectedSubject] = useState<number | null>(null);
@@ -95,6 +97,12 @@ export const Dashboard = () => {
                 }}
                 placeholder="Search subjects, lessons..."
               />
+              <Link to="/profile">
+                <Button variant="outline" size="sm" className="flex items-center gap-2">
+                  <User className="h-4 w-4" />
+                  Profile
+                </Button>
+              </Link>
               <Button variant="outline" size="sm" onClick={logout}>
                 Logout
               </Button>

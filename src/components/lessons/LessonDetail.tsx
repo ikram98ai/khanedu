@@ -3,8 +3,9 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { useLesson, useQuizzes, usePracticeTasks, useSubmitQuiz } from "@/hooks/useApiQueries";
+import { useLesson, useQuizzes, usePracticeTasks, useSubmitQuiz, useSubject } from "@/hooks/useApiQueries";
 import { ArrowLeft, BookOpen, Brain, Trophy, CheckCircle, X } from "lucide-react";
+import { AIAssistant } from "@/components/learning/AIAssistant";
 
 interface LessonDetailProps {
   subjectId: number;
@@ -17,6 +18,7 @@ export const LessonDetail = ({ subjectId, lessonId, onBack }: LessonDetailProps)
   const [activeQuiz, setActiveQuiz] = useState<number | null>(null);
 
   const { data: lesson, isLoading: lessonLoading } = useLesson(subjectId, lessonId);
+  const { data: subject } = useSubject(subjectId);
   const { data: quizzes, isLoading: quizzesLoading } = useQuizzes(subjectId, lessonId);
   const { data: practiceTasks, isLoading: tasksLoading } = usePracticeTasks(subjectId, lessonId);
   const submitQuizMutation = useSubmitQuiz();
@@ -215,6 +217,8 @@ export const LessonDetail = ({ subjectId, lessonId, onBack }: LessonDetailProps)
           </TabsContent>
         </Tabs>
       </div>
+      
+      <AIAssistant subject={subject?.name} lesson={lesson?.title} />
     </div>
   );
 };
