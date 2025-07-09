@@ -5,25 +5,32 @@ import { Badge } from "@/components/ui/badge";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Progress } from "@/components/ui/progress";
 import { useToast } from "@/hooks/use-toast";
-import { useQuizzes, usePracticeTasks, useSubmitQuiz } from "@/hooks/useApiQueries";
+import { useQuizzes, usePracticeTasks, useSubmitQuiz, useSubject, useLesson } from "@/hooks/useApiQueries";
+import { useParams } from "react-router-dom";
 
-interface LessonDetailProps {
-  lesson: any;
-  subject: any;
-  onBack: () => void;
-}
 
-export const LessonDetail = ({ lesson, subject, onBack }: LessonDetailProps) => {
+export const LessonDetail = () => {
+  const {subjectId, lessonId} = useParams();
+
+  const {data: subject} = useSubject(subjectId);
+  const {data: lesson} = useLesson(subjectId,lessonId);
+
   const [activeTab, setActiveTab] = useState("content");
   const [quizStarted, setQuizStarted] = useState(false);
   const [currentQuestion, setCurrentQuestion] = useState(0);
   const [selectedAnswers, setSelectedAnswers] = useState<Record<number, string>>({});
   const { toast } = useToast();
+
+
   
   const { data: quizzes = [] } = useQuizzes(subject?.id, lesson?.id);
   const { data: practiceTasks = [] } = usePracticeTasks(subject?.id, lesson?.id);
   const submitQuizMutation = useSubmitQuiz();
 
+  const onBack = () => {
+    window.history.back();
+  };
+  
   const mockQuiz = {
     id: 1,
     questions: [

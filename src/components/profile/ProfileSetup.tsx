@@ -1,105 +1,64 @@
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import { Label } from "@/components/ui/label";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { useToast } from "@/hooks/use-toast";
+import { Label } from "@/components/ui/label";
+import { useCreateProfile, useLanguages} from "@/hooks/useApiQueries";
+import { useNavigate } from "react-router-dom";
 
-interface ProfileSetupProps {
-  onComplete: (profile: any) => void;
-}
+
+
+export const ProfileSetup = () => {
+  const [formData, setFormData] = useState({
+    language: '',
+    current_grade: ''
+  });
+  const navigate = useNavigate();
+  const createProfileMutation = useCreateProfile();
+  
+  // const {data:languages, error} = useLanguages();
+
 
 const grades = [
-  { value: "GR1", label: "Grade 1" },
-  { value: "GR2", label: "Grade 2" },
-  { value: "GR3", label: "Grade 3" },
-  { value: "GR4", label: "Grade 4" },
-  { value: "GR5", label: "Grade 5" },
-  { value: "GR6", label: "Grade 6" },
-  { value: "GR7", label: "Grade 7" },
-  { value: "GR8", label: "Grade 8" },
-  { value: "GR9", label: "Grade 9" },
-  { value: "GR10", label: "Grade 10" },
-  { value: "GR11", label: "Grade 11" },
-  { value: "GR12", label: "Grade 12" },
+  { code: "1", name: "Grade 1" },
+  { code: "2", name: "Grade 2" },
+  { code: "3", name: "Grade 3" },
+  { code: "4", name: "Grade 4" },
+  { code: "5", name: "Grade 5" },
+  { code: "6", name: "Grade 6" },
+  { code: "7", name: "Grade 7" },
+  { code: "8", name: "Grade 8" },
+  { code: "9", name: "Grade 9" },
+  { code: "10", name: "Grade 10" },
+  { code: "11", name: "Grade 11" },
+  { code: "12", name: "Grade 12" },
 ];
 
 const languages = [
-  { value: "EN", label: "English" },
-  { value: "ES", label: "Spanish" },
-  { value: "FR", label: "French" },
-  { value: "DE", label: "German" },
-  { value: "IT", label: "Italian" },
-  { value: "PT", label: "Portuguese" },
+  { code: "EN", name: "English" },
+  { code: "ES", name: "Spanish" },
+  { code: "FR", name: "French" },
+  { code: "DE", name: "German" },
+  { code: "IT", name: "Italian" },
+  { code: "PT", name: "Portuguese" },
 ];
-
-export const ProfileSetup = ({ onComplete }: ProfileSetupProps) => {
-  const [profile, setProfile] = useState({
-    current_grade: '',
-    language: ''
-  });
-  const [loading, setLoading] = useState(false);
-  const { toast } = useToast();
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     
-    if (!profile.current_grade || !profile.language) {
-      toast({
-        title: "Missing Information",
-        description: "Please select both grade and language.",
-        variant: "destructive",
-      });
+    if (!formData.language || !formData.current_grade) {
       return;
     }
-
-    setLoading(true);
-
     try {
-      // Simulate API call for profile creation and auto-enrollment
-      setTimeout(() => {
-        const mockEnrollments = [
-          {
-            id: 1,
-            name: "Mathematics",
-            description: "Learn fundamental mathematical concepts",
-            grade_level: profile.current_grade,
-            language: profile.language
-          },
-          {
-            id: 2,
-            name: "Science",
-            description: "Explore the wonders of science",
-            grade_level: profile.current_grade,
-            language: profile.language
-          },
-          {
-            id: 3,
-            name: "Language Arts",
-            description: "Master reading, writing, and communication",
-            grade_level: profile.current_grade,
-            language: profile.language
-          }
-        ];
-
-        onComplete({
-          ...profile,
-          enrollments: mockEnrollments
-        });
-        
-        toast({
-          title: "Profile Created!",
-          description: `You've been automatically enrolled in ${mockEnrollments.length} subjects for ${grades.find(g => g.value === profile.current_grade)?.label}.`,
-        });
-        setLoading(false);
-      }, 1500);
+      const profile = await createProfileMutation.mutateAsync(formData);
+      if (profile) {
+        // Redirect to dashboard or show success message
+        console.log("Profile created successfully:", profile);
+        navigate("/dashboard");
+      }
     } catch (error) {
-      toast({
-        title: "Error",
-        description: "Failed to create profile. Please try again.",
-        variant: "destructive",
-      });
-      setLoading(false);
+      console.log(error)
+      // Error handling is done in the mutation
     }
   };
 
@@ -107,71 +66,68 @@ export const ProfileSetup = ({ onComplete }: ProfileSetupProps) => {
     <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-primary/10 via-background to-accent/20 p-4">
       <div className="w-full max-w-md">
         <Card className="shadow-large border-0">
-          <CardHeader className="text-center">
-            <div className="mx-auto w-16 h-16 bg-gradient-primary rounded-full flex items-center justify-center mb-4">
-              <span className="text-2xl">🎓</span>
+          <CardHeader className="text-center pb-2">
+            <div className="mx-auto w-12 h-12 bg-gradient-primary rounded-full flex items-center justify-center mb-4">
+              <span className="text-2xl font-bold text-white">📚</span>
             </div>
-            <CardTitle className="text-2xl font-bold">Complete Your Profile</CardTitle>
+            <CardTitle className="text-2xl font-bold">
+              Set Up Your Profile
+            </CardTitle>
             <CardDescription>
-              Tell us about yourself so we can personalize your learning experience
+              Tell us about your learning preferences
             </CardDescription>
           </CardHeader>
 
           <form onSubmit={handleSubmit}>
             <CardContent className="space-y-6">
-              <div className="space-y-2">
-                <Label htmlFor="grade">Current Grade</Label>
-                <Select
-                  value={profile.current_grade}
-                  onValueChange={(value) => setProfile(prev => ({ ...prev, current_grade: value }))}
-                >
-                  <SelectTrigger className="w-full">
-                    <SelectValue placeholder="Select your grade level" />
-                  </SelectTrigger>
-                  <SelectContent>
-                    {grades.map((grade) => (
-                      <SelectItem key={grade.value} value={grade.value}>
-                        {grade.label}
-                      </SelectItem>
-                    ))}
-                  </SelectContent>
-                </Select>
-              </div>
-
-              <div className="space-y-2">
+              <div>
                 <Label htmlFor="language">Preferred Language</Label>
-                <Select
-                  value={profile.language}
-                  onValueChange={(value) => setProfile(prev => ({ ...prev, language: value }))}
+                <Select 
+                  value={formData.language} 
+                  onValueChange={(value) => setFormData(prev => ({ ...prev, language: value }))}
                 >
-                  <SelectTrigger className="w-full">
+                  <SelectTrigger>
                     <SelectValue placeholder="Select your language" />
                   </SelectTrigger>
                   <SelectContent>
-                    {languages.map((language) => (
-                      <SelectItem key={language.value} value={language.value}>
-                        {language.label}
+                    {languages.map((lang) => (
+                      <SelectItem key={lang.code} value={lang.code}>
+                        {lang.name}
                       </SelectItem>
                     ))}
                   </SelectContent>
                 </Select>
               </div>
 
-              <div className="bg-accent/50 p-4 rounded-lg">
-                <h4 className="font-medium text-accent-foreground mb-2">What happens next?</h4>
-                <p className="text-sm text-muted-foreground">
-                  Based on your grade and language preferences, we'll automatically enroll you in the appropriate subjects and courses.
-                </p>
+              <div>
+                <Label htmlFor="grade">Current Grade Level</Label>
+                <Select 
+                  value={formData.current_grade} 
+                  onValueChange={(value) => setFormData(prev => ({ ...prev, current_grade: value }))}
+                >
+                  <SelectTrigger>
+                    <SelectValue placeholder="Select your grade" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    {grades.map((grade) => (
+                      <SelectItem key={grade.code} value={grade.code}>
+                        {grade.name}
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
               </div>
+            </CardContent>
 
+            <CardContent>
               <Button
                 type="submit"
                 variant="gradient"
                 size="lg"
                 className="w-full"
-                disabled={loading}
+                disabled={!formData.language || !formData.current_grade || createProfileMutation.isPending}
               >
-                {loading ? "Setting up your profile..." : "Complete Setup"}
+                {createProfileMutation.isPending ? "Setting up..." : "Complete Setup"}
               </Button>
             </CardContent>
           </form>

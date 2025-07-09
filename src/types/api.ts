@@ -1,7 +1,7 @@
 // API Types based on apidocs.md
 
 export interface User {
-  id: number;
+  id: string;
   username: string;
   email: string;
   is_staff: boolean;
@@ -16,7 +16,7 @@ export interface AuthResponse {
 }
 
 export interface Subject {
-  id: number;
+  id: string;
   name: string;
   description: string;
   grade_level: number;
@@ -24,25 +24,27 @@ export interface Subject {
 }
 
 export interface Lesson {
-  id: number;
+  id: string;
   instructor: string;
   subject: string;
   title: string;
   content: string;
-  status: 'PU' | 'DR' | 'AR'; // Published, Draft, Archived
+  status: 'VE' | 'DR' 
+  duration?: string; // Duration in minutes
+  progress?: number; // Progress percentage
   created_at: string;
   verified_at: string | null;
 }
 
 export interface Question {
-  id: number;
+  id: string;
   question_text: string;
   correct_answer: string;
 }
 
 export interface Quiz {
-  id: number;
-  lesson: number;
+  id: string;
+  lesson: string;
   lesson_title: string;
   version: number;
   questions: Question[];
@@ -51,8 +53,8 @@ export interface Quiz {
 }
 
 export interface PracticeTask {
-  id: number;
-  lesson: number;
+  id: string;
+  lesson: string;
   lesson_title: string;
   content: string;
   difficulty: 'EA' | 'ME' | 'HA'; // Easy, Medium, Hard
@@ -61,7 +63,7 @@ export interface PracticeTask {
 }
 
 export interface StudentProfile {
-  id: number;
+  id: string;
   username: string;
   email: string;
   first_name: string;
@@ -71,14 +73,14 @@ export interface StudentProfile {
 }
 
 export interface Enrollment {
-  id: number;
+  id: string;
   student: string;
-  subject: string;
+  subject: Subject;
   enrolled_at: string;
 }
 
 export interface QuizAttempt {
-  id: number;
+  id: string;
   student: User;
   quiz: Quiz;
   start_time: string;
@@ -89,12 +91,12 @@ export interface QuizAttempt {
 }
 
 export interface QuizResponse {
-  question_id: number;
+  question_id: string;
   answer: string;
 }
 
 export interface QuizSubmission {
-  quiz_id: number;
+  quiz_id: string;
   responses: QuizResponse[];
 }
 

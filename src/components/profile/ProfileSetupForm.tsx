@@ -3,13 +3,11 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Label } from "@/components/ui/label";
-import { useCreateProfile } from "@/hooks/useApiQueries";
+import { useCreateProfile, useLanguages} from "@/hooks/useApiQueries";
 
-interface ProfileSetupFormProps {
-  onComplete: (profileData: any) => void;
-}
 
-export const ProfileSetupForm = ({ onComplete }: ProfileSetupFormProps) => {
+
+export const ProfileSetupForm = () => {
   const [formData, setFormData] = useState({
     language: '',
     current_grade: ''
@@ -17,12 +15,7 @@ export const ProfileSetupForm = ({ onComplete }: ProfileSetupFormProps) => {
 
   const createProfileMutation = useCreateProfile();
 
-  const languages = [
-    { code: 'EN', name: 'English' },
-    { code: 'ES', name: 'Spanish' },
-    { code: 'FR', name: 'French' },
-    { code: 'DE', name: 'German' }
-  ];
+  const {data:languages,error} = useLanguages();
 
   const grades = [
     { code: 'GR9', name: 'Grade 9' },
@@ -44,7 +37,6 @@ export const ProfileSetupForm = ({ onComplete }: ProfileSetupFormProps) => {
 
     try {
       const profile = await createProfileMutation.mutateAsync(formData);
-      onComplete(profile);
     } catch (error) {
       // Error handling is done in the mutation
     }

@@ -6,13 +6,8 @@ import { Label } from "@/components/ui/label";
 import { useLogin, useRegister } from "@/hooks/useApiQueries";
 import { useAuthStore } from "@/stores/authStore";
 
-interface AuthFormProps {
-  mode: 'login' | 'register';
-  onToggleMode: () => void;
-  onAuth: (data: any) => void;
-}
 
-export const AuthForm = ({ mode, onToggleMode, onAuth }: AuthFormProps) => {
+export const AuthForm = () => {
   const [formData, setFormData] = useState({
     email: '',
     password: '',
@@ -20,11 +15,15 @@ export const AuthForm = ({ mode, onToggleMode, onAuth }: AuthFormProps) => {
     first_name: '',
     last_name: ''
   });
+  const [mode, setAuthMode] = useState('login')
   
   const loginMutation = useLogin();
   const registerMutation = useRegister();
   const { isLoading } = useAuthStore();
 
+  const toggleAuthMode = () => {
+    setAuthMode(prev => prev === 'login' ? 'register' : 'login');
+  };
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
@@ -34,10 +33,10 @@ export const AuthForm = ({ mode, onToggleMode, onAuth }: AuthFormProps) => {
           email: formData.email,
           password: formData.password
         });
-        onAuth({ user: formData });
+        // onAuth({ user: formData });
       } else {
         const result = await registerMutation.mutateAsync(formData);
-        onAuth({ user: formData });
+        // onAuth({ user: formData });
       }
     } catch (error) {
       // Error handling is done in the mutations
@@ -154,7 +153,7 @@ export const AuthForm = ({ mode, onToggleMode, onAuth }: AuthFormProps) => {
                 {mode === 'login' ? "Don't have an account?" : "Already have an account?"}
                 <button
                   type="button"
-                  onClick={onToggleMode}
+                  onClick={toggleAuthMode}
                   className="ml-1 text-primary hover:underline font-medium"
                 >
                   {mode === 'login' ? 'Sign up' : 'Sign in'}

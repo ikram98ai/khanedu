@@ -4,18 +4,16 @@ import { Progress } from "@/components/ui/progress";
 import { Badge } from "@/components/ui/badge";
 import { SmartSearch } from "@/components/search/SmartSearch";
 import { ProgressAnalytics } from "@/components/learning/ProgressAnalytics";
-import { useSubjects, useStudentDashboard } from "@/hooks/useApiQueries";
+import { useSubjects, useStudentDashboard, useEnrollments } from "@/hooks/useApiQueries";
+import { useAuthStore } from "@/stores/authStore";
+import { useNavigate } from "react-router-dom";
 
-interface DashboardProps {
-  user: any;
-  enrollments: any[];
-  onSelectSubject: (subject: any) => void;
-}
 
-export const Dashboard = ({ user, enrollments, onSelectSubject }: DashboardProps) => {
-  const { data: subjects = [] } = useSubjects();
-  const { data: dashboardData } = useStudentDashboard();
+export const Dashboard = () => {
+  const { data: enrollments = [] } = useEnrollments();
+  const { user } = useAuthStore();
 
+  const navigate = useNavigate();
   const mockProgress = {
     completedLessons: 12,
     totalLessons: 45,
@@ -29,10 +27,12 @@ export const Dashboard = ({ user, enrollments, onSelectSubject }: DashboardProps
     { id: 3, subject: "Language Arts", lesson: "Creative Writing", score: 95, completedAt: "2 days ago" },
   ];
 
-  // Get enrolled subjects from subjects list based on enrollments
-  const enrolledSubjects = subjects.filter(subject => 
-    enrollments.some(enrollment => enrollment.subject === subject.name)
-  );
+ 
+
+  const onSelectSubject = (subjectId:string) => {
+    // Navigate to subject detail page
+    navigate(`/subjects/${subjectId}`);
+  };
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-background via-accent/5 to-primary/5">
@@ -110,13 +110,13 @@ export const Dashboard = ({ user, enrollments, onSelectSubject }: DashboardProps
           <div className="animate-slide-up-fade" style={{ animationDelay: '0.6s' }}>
             <h2 className="text-2xl font-bold mb-6">Your Subjects</h2>
             <div className="space-y-4">
-              {enrolledSubjects.map((subject, index) => (
+              {enrollments.map(({subject}, index) => (
                 <Card 
                   key={subject.id} 
                   variant="interactive"
                   className="animate-spring-in"
                   style={{ animationDelay: `${0.8 + (index * 0.1)}s` }}
-                  onClick={() => onSelectSubject(subject)}
+                  onClick={() => onSelectSubject(subject.id)}
                 >
                   <CardContent className="p-6">
                     <div className="flex items-start justify-between">

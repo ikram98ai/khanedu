@@ -1,14 +1,15 @@
-import { ReactNode, useEffect } from 'react';
-import { useAuthStore } from '@/stores/authStore';
-import { refreshToken as refreshTokenApi } from '@/services/api';
-import { useToast } from '@/hooks/use-toast';
+import { ReactNode, useEffect } from "react";
+import { useAuthStore } from "@/stores/authStore";
+import { refreshToken as refreshTokenApi } from "@/services/demo_api";
+import { useToast } from "@/hooks/use-toast";
 
 interface AuthProviderProps {
   children: ReactNode;
 }
 
 export const AuthProvider = ({ children }: AuthProviderProps) => {
-  const { refreshToken, isAuthenticated, clearAuth, setAuth, setLoading } = useAuthStore();
+  const { refreshToken, isAuthenticated, clearAuth, setAuth, setLoading } =
+    useAuthStore();
   const { toast } = useToast();
 
   useEffect(() => {
@@ -21,19 +22,19 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
       try {
         setLoading(true);
         const response = await refreshTokenApi(refreshToken);
-        
+
         // Update the access token in store
         const currentUser = useAuthStore.getState().user;
         if (currentUser) {
           setAuth(currentUser, response.access, refreshToken);
         }
       } catch (error) {
-        console.error('Token refresh failed:', error);
+        console.error("Token refresh failed:", error);
         clearAuth();
         toast({
           title: "Session Expired",
           description: "Please log in again to continue.",
-          variant: "destructive"
+          variant: "destructive",
         });
       } finally {
         setLoading(false);
@@ -58,7 +59,7 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
           setAuth(currentUser, response.access, refreshToken);
         }
       } catch (error) {
-        console.error('Periodic token refresh failed:', error);
+        console.error("Periodic token refresh failed:", error);
         clearAuth();
       }
     }, 14 * 60 * 1000); // 14 minutes

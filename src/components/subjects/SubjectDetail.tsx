@@ -3,66 +3,28 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Progress } from "@/components/ui/progress";
-import { useLessons } from "@/hooks/useApiQueries";
-
-interface SubjectDetailProps {
-  subject: any;
-  onBack: () => void;
-  onSelectLesson: (lesson: any) => void;
-}
-
-export const SubjectDetail = ({ subject, onBack, onSelectLesson }: SubjectDetailProps) => {
-
-  const mockLessons = [
-    {
-      id: 1,
-      title: "Introduction to Algebra",
-      content: "Learn the basic concepts of algebraic expressions and equations.",
-      status: "PU",
-      unit: 0,
-      progress: 100,
-      duration: "15 min",
-    },
-    {
-      id: 2,
-      title: "Linear Equations",
-      content: "Solve linear equations step by step with practical examples.",
-      status: "PU",
-      unit: 1,
-      progress: 75,
-      duration: "20 min",
-    },
-    {
-      id: 3,
-      title: "Quadratic Equations",
-      content: "Master quadratic equations and their graphical representations.",
-      status: "PU",
-      unit: 2,
-      progress: 50,
-      duration: "25 min",
-    },
-    {
-      id: 4,
-      title: "Polynomial Functions",
-      content: "Explore polynomial functions and their properties.",
-      status: "PU",
-      unit: 3,
-      progress: 0,
-      duration: "30 min",
-    },
-    {
-      id: 5,
-      title: "Systems of Equations",
-      content: "Learn to solve systems of linear and nonlinear equations.",
-      status: "PU",
-      unit: 4,
-      progress: 0,
-      duration: "35 min",
-    }
-  ];
+import { useSubject, useLessons } from "@/hooks/useApiQueries";
+import { useNavigate, useParams } from "react-router-dom";
+import { AIAssistant } from "../learning/AIAssistant";
 
 
+export const SubjectDetail = () => {
+  const { subjectId } = useParams()
+  const {data: subject} = useSubject(subjectId)
+  const {data: lessons } = useLessons(subjectId)
+  const navigate = useNavigate();
 
+  console.log("Subject Detail", subjectId, subject, lessons);
+
+  const onBack = () => {
+    window.history.back();
+  };
+
+  const onSelectLesson = (lessonId:string) => {
+    // Navigate to lesson detail page
+    navigate(`/lessons/${lessonId}`);
+  };
+  
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-background via-accent/5 to-primary/5">
@@ -121,11 +83,11 @@ export const SubjectDetail = ({ subject, onBack, onSelectLesson }: SubjectDetail
           <div className="lg:col-span-3">
      
             <div className="space-y-4">
-              {mockLessons.map((lesson, index) => (
+              {lessons.map((lesson, index) => (
                 <Card 
                   key={lesson.id} 
                   className="shadow-soft hover:shadow-medium transition-all duration-200 cursor-pointer"
-                  onClick={() => onSelectLesson(lesson)}
+                  onClick={() => onSelectLesson(lesson.id)}
                 >
                   <CardContent className="p-6">
                     <div className="flex items-start justify-between">
@@ -178,6 +140,7 @@ export const SubjectDetail = ({ subject, onBack, onSelectLesson }: SubjectDetail
           </div>
         </div>
       </div>
+    <AIAssistant/>  
     </div>
   );
 };

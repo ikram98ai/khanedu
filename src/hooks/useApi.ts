@@ -1,19 +1,19 @@
 // React hooks for API calls
-import { useState, useEffect, useCallback } from 'react';
-import { toast } from 'sonner';
-import * as api from '@/services/api';
-import { 
-  User, 
-  Subject, 
-  Lesson, 
-  Quiz, 
-  PracticeTask, 
-  StudentProfile, 
+import { useState, useEffect, useCallback } from "react";
+import { toast } from "sonner";
+import * as api from "@/services/demo_api";
+import {
+  User,
+  Subject,
+  Lesson,
+  Quiz,
+  PracticeTask,
+  StudentProfile,
   Enrollment,
   StudentDashboard,
   Language,
-  QuizSubmission
-} from '@/types/api';
+  QuizSubmission,
+} from "@/types/api";
 
 // Generic hook for API calls
 export function useAsyncOperation<T>() {
@@ -29,7 +29,8 @@ export function useAsyncOperation<T>() {
       setData(result);
       return result;
     } catch (err) {
-      const errorMessage = err instanceof Error ? err.message : 'An error occurred';
+      const errorMessage =
+        err instanceof Error ? err.message : "An error occurred";
       setError(errorMessage);
       toast.error(errorMessage);
       throw err;
@@ -47,40 +48,50 @@ export function useAuth() {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const { loading, execute } = useAsyncOperation<any>();
 
-  const login = useCallback(async (email: string, password: string) => {
-    const authResponse = await execute(() => api.loginUser(email, password));
-    if (authResponse) {
-      localStorage.setItem('accessToken', authResponse.access);
-      localStorage.setItem('refreshToken', authResponse.refresh);
-      const userData = await api.getCurrentUser();
-      setUser(userData);
-      setIsAuthenticated(true);
-      toast.success('Successfully logged in!');
-    }
-    return authResponse;
-  }, [execute]);
+  const login = useCallback(
+    async (email: string, password: string) => {
+      const authResponse = await execute(() => api.loginUser(email, password));
+      if (authResponse) {
+        localStorage.setItem("accessToken", authResponse.access);
+        localStorage.setItem("refreshToken", authResponse.refresh);
+        const userData = await api.getCurrentUser();
+        setUser(userData);
+        setIsAuthenticated(true);
+        toast.success("Successfully logged in!");
+      }
+      return authResponse;
+    },
+    [execute]
+  );
 
-  const register = useCallback(async (userData: Partial<User>) => {
-    const newUser = await execute(() => api.registerUser(userData));
-    if (newUser) {
-      toast.success('Account created successfully!');
-    }
-    return newUser;
-  }, [execute]);
+  const register = useCallback(
+    async (userData: Partial<User>) => {
+      const newUser = await execute(() => api.registerUser(userData));
+      if (newUser) {
+        toast.success("Account created successfully!");
+      }
+      return newUser;
+    },
+    [execute]
+  );
 
   const logout = useCallback(() => {
-    localStorage.removeItem('accessToken');
-    localStorage.removeItem('refreshToken');
+    localStorage.removeItem("accessToken");
+    localStorage.removeItem("refreshToken");
     setUser(null);
     setIsAuthenticated(false);
-    toast.success('Successfully logged out!');
+    toast.success("Successfully logged out!");
   }, []);
 
   return { user, isAuthenticated, login, register, logout, loading };
 }
 
 // Subject hooks
-export function useSubjects(params?: { grade_level?: number; language?: string; search?: string }) {
+export function useSubjects(params?: {
+  grade_level?: number;
+  language?: string;
+  search?: string;
+}) {
   const [subjects, setSubjects] = useState<Subject[]>([]);
   const { loading, error, execute } = useAsyncOperation<Subject[]>();
 
@@ -88,7 +99,12 @@ export function useSubjects(params?: { grade_level?: number; language?: string; 
     execute(() => api.getSubjects(params)).then(setSubjects);
   }, [execute, params?.grade_level, params?.language, params?.search]);
 
-  return { subjects, loading, error, refetch: () => execute(() => api.getSubjects(params)).then(setSubjects) };
+  return {
+    subjects,
+    loading,
+    error,
+    refetch: () => execute(() => api.getSubjects(params)).then(setSubjects),
+  };
 }
 
 export function useSubject(id: number) {
@@ -115,18 +131,22 @@ export function useLessons(subjectId: number) {
     }
   }, [execute, subjectId]);
 
-  const createLesson = useCallback(async (title: string) => {
-    try {
-      const newLesson = await api.createLesson(subjectId, title);
-      setLessons(prev => [...prev, newLesson]);
-      toast.success('Lesson created successfully!');
-      return newLesson;
-    } catch (error) {
-      const errorMessage = error instanceof Error ? error.message : 'Failed to create lesson';
-      toast.error(errorMessage);
-      throw error;
-    }
-  }, [subjectId]);
+  const createLesson = useCallback(
+    async (title: string) => {
+      try {
+        const newLesson = await api.createLesson(subjectId, title);
+        setLessons((prev) => [...prev, newLesson]);
+        toast.success("Lesson created successfully!");
+        return newLesson;
+      } catch (error) {
+        const errorMessage =
+          error instanceof Error ? error.message : "Failed to create lesson";
+        toast.error(errorMessage);
+        throw error;
+      }
+    },
+    [subjectId]
+  );
 
   return { lessons, loading, error, createLesson };
 }
@@ -161,13 +181,18 @@ export function useQuizzes(subjectId: number, lessonId: number) {
 export function useQuizSubmission() {
   const { loading, execute } = useAsyncOperation<any>();
 
-  const submitQuiz = useCallback(async (submission: QuizSubmission) => {
-    const result = await execute(() => api.submitQuiz(submission));
-    if (result) {
-      toast.success(`Quiz completed! Score: ${result.attempt.score.toFixed(1)}%`);
-    }
-    return result;
-  }, [execute]);
+  const submitQuiz = useCallback(
+    async (submission: QuizSubmission) => {
+      const result = await execute(() => api.submitQuiz(submission));
+      if (result) {
+        toast.success(
+          `Quiz completed! Score: ${result.attempt.score.toFixed(1)}%`
+        );
+      }
+      return result;
+    },
+    [execute]
+  );
 
   return { submitQuiz, loading };
 }
@@ -191,14 +216,19 @@ export function useStudentProfile() {
   const [profile, setProfile] = useState<StudentProfile | null>(null);
   const { loading, error, execute } = useAsyncOperation<StudentProfile>();
 
-  const createProfile = useCallback(async (profileData: { language: string; current_grade: string }) => {
-    const newProfile = await execute(() => api.createStudentProfile(profileData));
-    if (newProfile) {
-      setProfile(newProfile);
-      toast.success('Profile created successfully!');
-    }
-    return newProfile;
-  }, [execute]);
+  const createProfile = useCallback(
+    async (profileData: { language: string; current_grade: string }) => {
+      const newProfile = await execute(() =>
+        api.createStudentProfile(profileData)
+      );
+      if (newProfile) {
+        setProfile(newProfile);
+        toast.success("Profile created successfully!");
+      }
+      return newProfile;
+    },
+    [execute]
+  );
 
   const fetchProfile = useCallback(async () => {
     const profileData = await execute(() => api.getStudentProfile());
@@ -251,10 +281,15 @@ export function useLanguages() {
 export function useAIAssistant() {
   const { loading, execute } = useAsyncOperation<any>();
 
-  const getAssistance = useCallback(async (message: string, context: string) => {
-    const response = await execute(() => api.getAiAssistance({ message, context }));
-    return response?.response;
-  }, [execute]);
+  const getAssistance = useCallback(
+    async (message: string, context: string) => {
+      const response = await execute(() =>
+        api.getAiAssistance({ message, context })
+      );
+      return response?.response;
+    },
+    [execute]
+  );
 
   return { getAssistance, loading };
 }

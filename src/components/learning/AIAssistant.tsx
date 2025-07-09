@@ -13,13 +13,7 @@ interface Message {
   timestamp: Date;
 }
 
-interface AIAssistantProps {
-  subject?: string;
-  lesson?: string;
-  onClose?: () => void;
-}
-
-export const AIAssistant = ({ subject, lesson, onClose }: AIAssistantProps) => {
+export const AIAssistant = () => {
   const [isOpen, setIsOpen] = useState(false);
   const [messages, setMessages] = useState<Message[]>([]);
   const [input, setInput] = useState("");
@@ -30,6 +24,8 @@ export const AIAssistant = ({ subject, lesson, onClose }: AIAssistantProps) => {
   const scrollToBottom = () => {
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
   };
+  const subject = "Mathematics"; // Replace with dynamic subject if needed
+  const lesson = "Algebra Basics"; // Replace with dynamic lesson if needed.
 
   useEffect(() => {
     scrollToBottom();
