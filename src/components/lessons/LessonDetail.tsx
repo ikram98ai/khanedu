@@ -5,6 +5,7 @@ import { Badge } from "@/components/ui/badge";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Progress } from "@/components/ui/progress";
 import { useToast } from "@/hooks/use-toast";
+import { useQuizzes, usePracticeTasks, useSubmitQuiz } from "@/hooks/useApiQueries";
 
 interface LessonDetailProps {
   lesson: any;
@@ -18,6 +19,10 @@ export const LessonDetail = ({ lesson, subject, onBack }: LessonDetailProps) => 
   const [currentQuestion, setCurrentQuestion] = useState(0);
   const [selectedAnswers, setSelectedAnswers] = useState<Record<number, string>>({});
   const { toast } = useToast();
+  
+  const { data: quizzes = [] } = useQuizzes(subject?.id, lesson?.id);
+  const { data: practiceTasks = [] } = usePracticeTasks(subject?.id, lesson?.id);
+  const submitQuizMutation = useSubmitQuiz();
 
   const mockQuiz = {
     id: 1,

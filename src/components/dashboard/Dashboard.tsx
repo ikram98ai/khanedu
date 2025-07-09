@@ -4,6 +4,7 @@ import { Progress } from "@/components/ui/progress";
 import { Badge } from "@/components/ui/badge";
 import { SmartSearch } from "@/components/search/SmartSearch";
 import { ProgressAnalytics } from "@/components/learning/ProgressAnalytics";
+import { useSubjects, useStudentDashboard } from "@/hooks/useApiQueries";
 
 interface DashboardProps {
   user: any;
@@ -12,6 +13,9 @@ interface DashboardProps {
 }
 
 export const Dashboard = ({ user, enrollments, onSelectSubject }: DashboardProps) => {
+  const { data: subjects = [] } = useSubjects();
+  const { data: dashboardData } = useStudentDashboard();
+
   const mockProgress = {
     completedLessons: 12,
     totalLessons: 45,
@@ -24,6 +28,11 @@ export const Dashboard = ({ user, enrollments, onSelectSubject }: DashboardProps
     { id: 2, subject: "Science", lesson: "Chemical Reactions", score: 85, completedAt: "1 day ago" },
     { id: 3, subject: "Language Arts", lesson: "Creative Writing", score: 95, completedAt: "2 days ago" },
   ];
+
+  // Get enrolled subjects from subjects list based on enrollments
+  const enrolledSubjects = subjects.filter(subject => 
+    enrollments.some(enrollment => enrollment.subject === subject.name)
+  );
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-background via-accent/5 to-primary/5">
@@ -101,7 +110,7 @@ export const Dashboard = ({ user, enrollments, onSelectSubject }: DashboardProps
           <div className="animate-slide-up-fade" style={{ animationDelay: '0.6s' }}>
             <h2 className="text-2xl font-bold mb-6">Your Subjects</h2>
             <div className="space-y-4">
-              {enrollments.map((subject, index) => (
+              {enrolledSubjects.map((subject, index) => (
                 <Card 
                   key={subject.id} 
                   variant="interactive"

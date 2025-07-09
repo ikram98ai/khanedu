@@ -3,7 +3,8 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { useAuth } from "@/hooks/useApi";
+import { useLogin, useRegister } from "@/hooks/useApiQueries";
+import { useAuthStore } from "@/stores/authStore";
 
 interface AuthFormProps {
   mode: 'login' | 'register';
@@ -20,21 +21,26 @@ export const AuthForm = ({ mode, onToggleMode, onAuth }: AuthFormProps) => {
     last_name: ''
   });
   
-  const { login, register, loading } = useAuth();
+  const loginMutation = useLogin();
+  const registerMutation = useRegister();
+  const { isLoading } = useAuthStore();
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
     try {
       if (mode === 'login') {
-        await login(formData.email, formData.password);
+        const result = await loginMutation.mutateAsync({
+          email: formData.email,
+          password: formData.password
+        });
         onAuth({ user: formData });
       } else {
-        await register(formData);
+        const result = await registerMutation.mutateAsync(formData);
         onAuth({ user: formData });
       }
     } catch (error) {
-      // Error handling is done in the hook
+      // Error handling is done in the mutations
     }
   };
 
@@ -139,9 +145,9 @@ export const AuthForm = ({ mode, onToggleMode, onAuth }: AuthFormProps) => {
                 variant="gradient"
                 size="lg"
                 className="w-full"
-                disabled={loading}
+                disabled={isLoading || loginMutation.isPending || registerMutation.isPending}
               >
-                {loading ? "Processing..." : mode === 'login' ? 'Sign In' : 'Sign Up'}
+                {(isLoading || loginMutation.isPending || registerMutation.isPending) ? "Processing..." : mode === 'login' ? 'Sign In' : 'Sign Up'}
               </Button>
               
               <p className="text-sm text-muted-foreground">
