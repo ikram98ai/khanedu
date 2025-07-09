@@ -5,9 +5,11 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { useLogin, useRegister } from "@/hooks/useApiQueries";
 import { useAuthStore } from "@/stores/authStore";
+import { useNavigate } from "react-router-dom";
 
 
 export const AuthForm = () => {
+  const navigate = useNavigate();
   const [formData, setFormData] = useState({
     email: '',
     password: '',
@@ -19,7 +21,12 @@ export const AuthForm = () => {
   
   const loginMutation = useLogin();
   const registerMutation = useRegister();
-  const { isLoading } = useAuthStore();
+  const { isLoading, isAuthenticated } = useAuthStore();
+
+  if (isAuthenticated) {
+    navigate('/dashboard');
+    return null; // Prevent rendering the form if already authenticated
+  }
 
   const toggleAuthMode = () => {
     setAuthMode(prev => prev === 'login' ? 'register' : 'login');
@@ -55,8 +62,8 @@ export const AuthForm = () => {
       <div className="w-full max-w-md">
         <Card className="shadow-large border-0">
           <CardHeader className="text-center pb-2">
-            <div className="mx-auto w-12 h-12 bg-gradient-primary rounded-full flex items-center justify-center mb-4">
-              <span className="text-2xl font-bold text-white">E</span>
+            <div className="mx-auto w-16 h-16 rounded-full flex items-center justify-center mb-4">
+              <img src="/logo.png" alt="Khan Education Logo" className="w-16 h-16" />
             </div>
             <CardTitle className="text-2xl font-bold">
               {mode === 'login' ? 'Welcome Back' : 'Create Account'}

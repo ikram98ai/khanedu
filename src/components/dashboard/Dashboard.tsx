@@ -4,16 +4,15 @@ import { Progress } from "@/components/ui/progress";
 import { Badge } from "@/components/ui/badge";
 import { SmartSearch } from "@/components/search/SmartSearch";
 import { ProgressAnalytics } from "@/components/learning/ProgressAnalytics";
-import { useSubjects, useStudentDashboard, useEnrollments } from "@/hooks/useApiQueries";
+import { useEnrollments } from "@/hooks/useApiQueries";
 import { useAuthStore } from "@/stores/authStore";
-import { useNavigate } from "react-router-dom";
+import { Link } from "react-router-dom";
 
 
 export const Dashboard = () => {
   const { data: enrollments = [] } = useEnrollments();
   const { user } = useAuthStore();
 
-  const navigate = useNavigate();
   const mockProgress = {
     completedLessons: 12,
     totalLessons: 45,
@@ -29,10 +28,7 @@ export const Dashboard = () => {
 
  
 
-  const onSelectSubject = (subjectId:string) => {
-    // Navigate to subject detail page
-    navigate(`/subjects/${subjectId}`);
-  };
+
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-background via-accent/5 to-primary/5">
@@ -111,42 +107,43 @@ export const Dashboard = () => {
             <h2 className="text-2xl font-bold mb-6">Your Subjects</h2>
             <div className="space-y-4">
               {enrollments.map(({subject}, index) => (
-                <Card 
-                  key={subject.id} 
-                  variant="interactive"
-                  className="animate-spring-in"
-                  style={{ animationDelay: `${0.8 + (index * 0.1)}s` }}
-                  onClick={() => onSelectSubject(subject.id)}
-                >
-                  <CardContent className="p-6">
-                    <div className="flex items-start justify-between">
-                      <div className="flex-1">
-                        <h3 className="text-lg font-semibold mb-2">{subject.name}</h3>
-                        <p className="text-muted-foreground text-sm mb-3">{subject.description}</p>
-                        
-                        <div className="flex items-center gap-2 mb-3">
-                          <Badge variant="secondary">
-                            {subject.grade_level}
-                          </Badge>
-                          <Badge variant="outline">
-                            {subject.language}
-                          </Badge>
-                        </div>
-
-                        <div className="flex items-center justify-between">
-                          <div className="text-sm text-muted-foreground">
-                            Progress: {20 + (index * 25)}% complete
+                <Link to={`/subjects/${subject.id}`} key={subject.id}>
+                  <Card 
+                    key={subject.id} 
+                    variant="interactive"
+                    className="animate-spring-in"
+                    style={{ animationDelay: `${0.8 + (index * 0.1)}s` }}
+                  >
+                    <CardContent className="p-6">
+                      <div className="flex items-start justify-between">
+                        <div className="flex-1">
+                          <h3 className="text-lg font-semibold mb-2">{subject.name}</h3>
+                          <p className="text-muted-foreground text-sm mb-3">{subject.description}</p>
+                          
+                          <div className="flex items-center gap-2 mb-3">
+                            <Badge variant="secondary">
+                              {subject.grade_level}
+                            </Badge>
+                            <Badge variant="outline">
+                              {subject.language}
+                            </Badge>
                           </div>
-                          <Button variant="glass" size="sm">
-                            Continue Learning
-                          </Button>
+
+                          <div className="flex items-center justify-between">
+                            <div className="text-sm text-muted-foreground">
+                              Progress: {20 + (index * 25)}% complete
+                            </div>
+                            <Button variant="glass" size="sm">
+                              Continue Learning
+                            </Button>
+                          </div>
+                          
+                          <Progress value={20 + (index * 25)} className="mt-2" />
                         </div>
-                        
-                        <Progress value={20 + (index * 25)} className="mt-2" />
                       </div>
-                    </div>
-                  </CardContent>
-                </Card>
+                    </CardContent>
+                  </Card>
+                </Link>
               ))}
             </div>
           </div>

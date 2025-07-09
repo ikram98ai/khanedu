@@ -13,7 +13,6 @@ import { LessonDetail } from "./components/lessons/LessonDetail";
 import { ErrorBoundary } from "./components/error/ErrorBoundary";
 import { AccessibilityProvider } from "./components/accessibility/AccessibilityProvider";
 import { OfflineProvider } from "./components/offline/OfflineProvider";
-import { ProfileSetupForm } from "./components/profile/ProfileSetupForm";
 
 const App = () => (
   <TooltipProvider>
@@ -30,10 +29,11 @@ const App = () => (
               <Route element={<ProtectedRoute />}>
                 <Route path="/dashboard" element={<Dashboard />} />
                 <Route path="/subjects/:subjectId"  element={<SubjectDetail />} />
-                <Route path="/lessons/:lessonId" element={<LessonDetail />} />
+                <Route path="/subjects/:subjectId/lessons/:lessonId" element={<LessonDetail />} />
               </Route>
               {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
               <Route path="*" element={<NotFound />} />
+              
             </Routes>
           </BrowserRouter>
         </OfflineProvider>

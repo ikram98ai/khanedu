@@ -6,14 +6,13 @@ import {
   Users, 
   BarChart, 
   Play, 
-  CheckCircle
+  CheckCircle,
 } from 'lucide-react';
 import Header from '@/components/Header';
 import Footer from '@/components/Footer';
-import { useNavigate } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 
 export default function Index() {
-  const navigate = useNavigate();
 
   const features = [
     {
@@ -76,12 +75,11 @@ export default function Index() {
               EduAgent AI revolutionizes the classroom experience with personalized lessons, intelligent tutoring, and actionable insights for students and educators.
             </p>
             <div className="mt-10 flex flex-wrap gap-4">
-              <button 
-                onClick={() => navigate('/register')}
+              <Link to='/register'
                 className="bg-indigo-600 hover:bg-indigo-700 text-white font-semibold py-3 px-8 rounded-xl transition-all duration-300 shadow-lg hover:shadow-xl"
               >
                 Get Started Free
-              </button>
+              </Link>
               <button 
                 onClick={() => document.getElementById('features').scrollIntoView({ behavior: 'smooth' })}
                 className="bg-white hover:bg-gray-50 text-gray-800 font-semibold py-3 px-8 rounded-xl border border-gray-200 transition-all duration-300 shadow-md hover:shadow-lg"
@@ -309,18 +307,16 @@ export default function Index() {
             </p>
             
             <div className="flex flex-col sm:flex-row justify-center gap-4">
-              <button 
-                onClick={() => navigate('/register')}
+              <Link to='/register'
                 className="bg-white text-indigo-600 font-semibold py-3 px-8 rounded-xl hover:bg-gray-100 transition-colors shadow-lg"
               >
                 Get Started Free
-              </button>
-              <button 
-                onClick={() => navigate('/login')}
+              </Link>
+              <Link to='/login'
                 className="bg-transparent border-2 border-white text-white font-semibold py-3 px-8 rounded-xl hover:bg-white/10 transition-colors"
               >
                 Sign In
-              </button>
+              </Link>
             </div>
           </div>
         </div>
