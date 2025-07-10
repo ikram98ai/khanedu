@@ -18,24 +18,13 @@ import {
   submitQuiz,
   getAiAssistance,
   getStudentDashboard,
-  getLanguages
+  getLanguages,
 } from "@/services/api";
-import {
-  User,
-  Subject,
-  Lesson,
-  Quiz,
-  PracticeTask,
-  Enrollment,
-  StudentProfile,
-  StudentDashboard,
-  QuizSubmission,
-  AIAssistRequest,
-} from "@/types/api";
+import { User, QuizSubmission, AIAssistRequest } from "@/types/api";
 
 // Auth hooks
 export const useLogin = () => {
-  const { setAuth, setLoading } = useAuthStore();
+  const { setAuth, setLoading, setProfile } = useAuthStore();
   const { toast } = useToast();
 
   return useMutation({
@@ -45,8 +34,11 @@ export const useLogin = () => {
       setLoading(true);
     },
     onSuccess: async (data, variables) => {
-      const user = await getCurrentUser()
+      const user = await getCurrentUser();
+      const profile = await getStudentProfile()
       setAuth(user, data.access, data.refresh);
+      setProfile(profile)
+
       toast({
         title: "Welcome back!",
         description: "Successfully logged in.",
@@ -72,9 +64,10 @@ export const useRegister = () => {
     onMutate: () => {
       setLoading(true);
     },
-    onSuccess: (user) => {
-      // For demo purposes, also log them in after registration
-      setAuth(user, "token", "refresh_token");
+    onSuccess: async (user, variables) => {
+      // variables contains the userData passed to mutationFn, including password if provided
+      const response = await loginUser(user.email, variables.password);
+      setAuth(user, response.access, response.refresh);
       toast({
         title: "Account Created!",
         description: "Welcome to our educational platform.",
@@ -252,7 +245,7 @@ export const useStudentDashboard = () => {
 
 // Languages hooks
 export const useLanguages = () => {
-  console.log("Languages...")
+  console.log("Languages...");
   return useQuery({
     queryKey: ["get-languages"],
     queryFn: getLanguages,

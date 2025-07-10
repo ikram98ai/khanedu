@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
@@ -23,10 +23,12 @@ export const AuthForm = () => {
   const registerMutation = useRegister();
   const { isLoading, isAuthenticated } = useAuthStore();
 
-  if (isAuthenticated) {
-    navigate('/dashboard');
-    return null; // Prevent rendering the form if already authenticated
-  }
+  useEffect(() => {
+    if (isAuthenticated) {
+      navigate('/dashboard');
+    }
+  }, [isAuthenticated, navigate]);
+
 
   const toggleAuthMode = () => {
     setAuthMode(prev => prev === 'login' ? 'register' : 'login');
@@ -140,7 +142,7 @@ export const AuthForm = () => {
                   value={formData.password}
                   onChange={handleInputChange}
                   required
-                  placeholder="••••••••"
+                  placeholder="•••"
                 />
               </div>
             </CardContent>

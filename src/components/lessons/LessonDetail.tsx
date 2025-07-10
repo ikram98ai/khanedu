@@ -22,6 +22,7 @@ import { useParams } from "react-router-dom";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { Terminal } from "lucide-react";
+import { AIAssistant } from "../learning/AIAssistant";
 
 export const LessonDetail = () => {
   const { subjectId, lessonId } = useParams();
@@ -366,6 +367,7 @@ export const LessonDetail = () => {
           </TabsContent>
         </Tabs>
       </div>
+    <AIAssistant subject={subject.name} lesson={lesson.title} />
     </div>
   );
 };

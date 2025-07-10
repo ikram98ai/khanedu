@@ -24,29 +24,25 @@ export default function Header() {
           <div className="flex items-center space-x-4">
             {!isLoading && (isAuthenticated ? (
                 <>
-                <Link 
-                  to='/dashboard'
-                  className="bg-indigo-600 hover:bg-indigo-700 text-white font-semibold py-2 px-6 rounded-xl transition-colors"
-                >
-                  Go to Dashboard
-                </Link>
                 <button
                   onClick={useAuthStore.getState().clearAuth}
                   className="text-gray-600 hover:text-red-600 font-medium ml-2"
                 >
                   Logout
                 </button>
+
+                <Link 
+                  to='/dashboard'
+                  className="bg-indigo-600 hover:bg-indigo-700 text-white font-semibold py-2 px-6 rounded-xl transition-colors"
+                >
+                  Go to Dashboard
+                </Link>
                 </>
             ) : (
               <>
+      
                 <Link 
-                  to ='/login'
-                  className="text-gray-600 hover:text-indigo-600 font-medium hidden md:block"
-                >
-                  Sign In
-                </Link>
-                <Link 
-                  to='/register'
+                  to='/login'
                   className="bg-indigo-600 hover:bg-indigo-700 text-white font-semibold py-2 px-6 rounded-xl transition-colors"
                 >
                   Get Started

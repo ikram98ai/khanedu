@@ -4,6 +4,7 @@ export interface User {
   id: string;
   username: string;
   email: string;
+  password?: string;
   is_staff: boolean;
   first_name: string;
   last_name: string;

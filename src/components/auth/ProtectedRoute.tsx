@@ -12,9 +12,7 @@ const ProtectedRoute = () => {
   if (!user) {
     return <Navigate to="/login" replace />;
   }
-
-  if (profile === null) {
-    console.log("User does not have a profile, redirecting to profile setup", profile);
+  if (!profile) {
     return <Navigate to="/profile-setup" replace />;
   }
 

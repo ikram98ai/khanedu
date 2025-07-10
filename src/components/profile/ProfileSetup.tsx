@@ -67,8 +67,8 @@ const languages = [
       <div className="w-full max-w-md">
         <Card className="shadow-large border-0">
           <CardHeader className="text-center pb-2">
-            <div className="mx-auto w-12 h-12 bg-gradient-primary rounded-full flex items-center justify-center mb-4">
-              <span className="text-2xl font-bold text-white">📚</span>
+            <div className="mx-auto w-16 h-16 rounded-full flex items-center justify-center mb-4">
+              <img src="/logo.png" alt="khan education logo" />
             </div>
             <CardTitle className="text-2xl font-bold">
               Set Up Your Profile

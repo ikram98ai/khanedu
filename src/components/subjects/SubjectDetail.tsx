@@ -23,7 +23,6 @@ export const SubjectDetail = () => {
   } = useLessons(subjectId);
 
 
-  console.log("Subject Detail", subjectId, subject, lessons);
 
   const onBack = () => {
     window.history.back();
@@ -197,7 +196,7 @@ export const SubjectDetail = () => {
           </div>
         </div>
       </div>
-      <AIAssistant />
+      <AIAssistant subject={subject.name} />
     </div>
   );
 };

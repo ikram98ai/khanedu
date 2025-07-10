@@ -4,7 +4,6 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Badge } from "@/components/ui/badge";
 import { Sparkles, Send, Lightbulb, Brain, Target } from "lucide-react";
-import { useToast } from "@/hooks/use-toast";
 
 interface Message {
   id: string;
@@ -13,19 +12,17 @@ interface Message {
   timestamp: Date;
 }
 
-export const AIAssistant = () => {
+
+export const AIAssistant = ({subject, lesson}:{subject:string, lesson?:string}) => {
   const [isOpen, setIsOpen] = useState(false);
   const [messages, setMessages] = useState<Message[]>([]);
   const [input, setInput] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const messagesEndRef = useRef<HTMLDivElement>(null);
-  const { toast } = useToast();
 
   const scrollToBottom = () => {
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
   };
-  const subject = "Mathematics"; // Replace with dynamic subject if needed
-  const lesson = "Algebra Basics"; // Replace with dynamic lesson if needed.
 
   useEffect(() => {
     scrollToBottom();
@@ -164,7 +161,7 @@ export const AIAssistant = () => {
         </div>
 
         {/* Quick Actions */}
-        <div className="flex gap-1 mb-3">
+        <div className="flex gap-1 mb-3 overflow-x-auto">
           {quickActions.map((action, index) => (
             <Button
               key={index}

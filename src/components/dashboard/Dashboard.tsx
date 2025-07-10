@@ -7,6 +7,7 @@ import { ProgressAnalytics } from "@/components/learning/ProgressAnalytics";
 import { useEnrollments } from "@/hooks/useApiQueries";
 import { useAuthStore } from "@/stores/authStore";
 import { Link } from "react-router-dom";
+import { Navbar } from "../Navbar";
 
 
 export const Dashboard = () => {
@@ -33,16 +34,7 @@ export const Dashboard = () => {
   return (
     <div className="min-h-screen bg-gradient-to-br from-background via-accent/5 to-primary/5">
       {/* Header */}
-      <div className="bg-gradient-primary text-white px-6 py-8">
-        <div className="max-w-6xl mx-auto">
-          <h1 className="text-3xl font-bold mb-2">
-            Welcome back, {user.first_name}! 👋
-          </h1>
-          <p className="text-blue-100">
-            Ready to continue your learning journey?
-          </p>
-        </div>
-      </div>
+      <Navbar />
 
       <div className="max-w-6xl mx-auto px-6 py-8">
         {/* Smart Search */}
